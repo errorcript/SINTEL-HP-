@@ -66,6 +66,7 @@ async function handlePhoneLookup() {
         console.log(`Negara: ${chalk.cyan(info.country)}`);
         console.log(`Provider: ${chalk.cyan(info.carrier)}`);
         console.log(`Tipe Line: ${chalk.cyan(info.type)}`);
+        console.log(`Nama Asli (Truecaller): ${chalk.yellow(info.truecallerName)}`);
         printSuccess('Informasi dasar berhasil ditarik.');
     } else {
         printError('Nomor tidak valid atau tidak terdeteksi.');
