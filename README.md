@@ -19,7 +19,7 @@ Lu bisa nge-host alat lacak lu sendiri secara **GRATIS** dan mandiri:
 1. *Fork* / *Import* Repo ini ke Vercel lu (Settings -> Framework Preset: `Other`).
 2. Tungguin 1 menit sampe Deploy selesai (Warna Ijo).
 3. (Opsional) Kalo lu punya Auth token instalasi Truecaller, pasangin di settingan **Environment Variables** -> `TC_INSTALLATION_ID` di dalem Vercel. Kalo gapunya biarin aja.
-4. Buka URL Web lu (contoh: `https://sintel.neoma.space`), pancing target lu pake tab **LIVE GPS TRACKER**. KORDINAT BAKAL MUNCUL DI LAYAR SECARA *LIVE*!
+4. Buka URL Web lu (contoh: `https://sintel.vercel.app`), pancing target lu pake tab **LIVE GPS TRACKER**. KORDINAT BAKAL MUNCUL DI LAYAR SECARA *LIVE*!
 
 ---
 
