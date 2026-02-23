@@ -1,0 +1,24 @@
+{
+  "name": "mata-penipu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.13.5",
+    "boxen": "^5.1.2",
+    "chalk": "^4.1.2",
+    "cheerio": "^1.2.0",
+    "gradient-string": "^3.0.0",
+    "inquirer": "^8.2.4",
+    "libphonenumber-js": "^1.12.37",
+    "ora": "^5.4.1",
+    "truecallerjs": "^2.2.0"
+  }
+}
