@@ -256,11 +256,15 @@
             background: #000;
             padding: 1rem;
             border-radius: 8px;
+            word-wrap: break-word;
+            /* ensure long URL doesn't overflow */
             word-break: break-all;
             margin: 1rem 0;
             border: 1px dashed var(--accent);
             text-align: center;
             font-size: 0.85rem;
+            user-select: all;
+            /* make it easier to copy */
         }
 
         #panelTracker,
@@ -320,13 +324,58 @@
             height: 24px;
             border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s infinite;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
         }
 
         @keyframes spin {
             to {
                 transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Adjustments for Mobile */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                /* less padding on very small screens */
+            }
+
+            .header {
+                padding: 3rem 1rem 2rem;
+            }
+
+            .title {
+                font-size: 2.2rem;
+            }
+
+            .tabs {
+                gap: 5px;
+                /* tighter spacing for tabs */
+            }
+
+            .tab {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+
+            .button-group {
+                display: flex;
+                flex-direction: column;
+                /* stack buttons on small screens */
+                gap: 10px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .log-entry [style*="display:grid"] {
+                grid-template-columns: 1fr;
+                /* stack log grid items vertically */
+                gap: 5px;
             }
         }
     </style>
