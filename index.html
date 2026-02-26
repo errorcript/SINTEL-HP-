@@ -735,10 +735,10 @@
                         }
 
                         const logHtml = `
-                            <div class="log-entry" style="border-left: 3px solid ${tgt.lat ? 'var(--success)' : 'var(--accent)'}">
+                            <div class="log-entry" style="border-left: 3px solid ${tgt.type === 'GPS_SAT' ? 'var(--success)' : 'var(--accent)'}">
                                 <div style="display:flex; justify-content:space-between; align-items:start;">
                                     <div style="color:white; font-weight:bold; margin-bottom:5px;">
-                                        ${tgt.lat ? '📡 GPS TERKUNCI (ACCURATE)' : '⚠️ PING MASUK (IP ONLY)'}
+                                        ${tgt.type === 'GPS_SAT' ? '📡 GPS TERKUNCI (ACCURATE)' : '⚠️ PING MASUK (IP ONLY)'}
                                     </div>
                                     <div style="font-size:0.7rem; color:var(--text-dim)">${new Date(tgt.time).toLocaleTimeString()}</div>
                                 </div>
