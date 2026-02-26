@@ -689,12 +689,15 @@
                                 </div>
 
                                 <div style="font-size:0.8rem; background:rgba(0,0,0,0.4); padding:8px; border-radius:5px; margin-bottom:10px;">
+                                    <div style="color:var(--accent); font-family: monospace; font-size: 0.9rem; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom:4px;">
+                                        <i data-lucide="fingerprint" style="width:14px; vertical-align:middle;"></i> Device Hash: ${tgt.device_hash || '<span style="color:red">Bypassed</span>'}
+                                    </div>
                                     <div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
                                         <span><i data-lucide="monitor" style="width:12px; vertical-align:middle;"></i> Res: ${tgt.screen || 'Unknown'}</span>
                                         <span><i data-lucide="mouse-pointer-2" style="width:12px; vertical-align:middle;"></i> Touch: ${tgt.touch === 'Yes' ? '<span style="color:var(--success)">Yes</span>' : '<span style="color:var(--primary)">No</span>'}</span>
                                     </div>
                                     <div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
-                                        <span><i data-lucide="wifi" style="width:12px; vertical-align:middle;"></i> Net: ${tgt.network ? tgt.network.toUpperCase() : '??'}</span>
+                                        <span><i data-lucide="wifi" style="width:12px; vertical-align:middle;"></i> Net: ${tgt.network ? tgt.network.toUpperCase() : '??'} ${tgt.speed ? '(' + tgt.speed + ')' : ''}</span>
                                         <span><i data-lucide="globe" style="width:12px; vertical-align:middle;"></i> Lang: ${tgt.language || '??'}</span>
                                     </div>
                                     <div style="color:var(--text-dim);"><i data-lucide="clock" style="width:12px; vertical-align:middle;"></i> TZ: ${tgt.timezone || 'Unknown'}</div>

