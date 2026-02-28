@@ -17,7 +17,6 @@ async function main() {
             message: 'Apa yang ingin Anda lakukan?',
             choices: [
                 'Lacak Detail Nomor HP (Carrier/Info)',
-                'Cek Database Penipu (Search Dorks)',
                 'Tarik Data GetContact (Manual Guide)',
                 'Buat Link Jebakan (IP Logger)',
                 'Keluar'
@@ -30,9 +29,6 @@ async function main() {
     switch (answer.action) {
         case 'Lacak Detail Nomor HP (Carrier/Info)':
             await handlePhoneLookup();
-            break;
-        case 'Cek Database Penipu (Search Dorks)':
-            await handleScamSearch();
             break;
         case 'Tarik Data GetContact (Manual Guide)':
             handleGetContactGuide();
@@ -76,21 +72,6 @@ async function handlePhoneLookup() {
     main();
 }
 
-async function handleScamSearch() {
-    const { number } = await inquirer.prompt([{ type: 'input', name: 'number', message: 'Masukkan nomor HP penipu:' }]);
-    const dorks = await searchScamDB(number);
-
-    console.log('\x1Bc');
-    printHeader();
-    printInfo('Salin dan tempel query berikut di Google/DuckDuckGo untuk mencari riwayat penipuan:');
-
-    dorks.forEach(dork => {
-        console.log(chalk.hex(theme.warning)(`> ${dork}`));
-    });
-
-    console.log(chalk.dim('\nSearching database otomatis masih dalam pengembangan...'));
-    main();
-}
 
 function handleGetContactGuide() {
     console.log('\n' + chalk.bold.bgBlue(' MANUAL GETCONTACT OSINT '));

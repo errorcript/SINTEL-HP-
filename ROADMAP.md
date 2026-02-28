@@ -9,7 +9,6 @@ Dokumen ini berisi daftar ide dan rencana pengembangan fitur **SINTEL-HP** ke de
 - [x] **Validasi Nomor & Provider (Global Format)**.
 - [x] **HLR (Home Location Register) Region Lookup**.
 - [x] **Truecaller Auto-Doxx Integration**.
-- [x] **Dork Generator Web UI** (Clickable Links).
 - [x] **LIVE GPS TRACKER & SILENT IP LOGGER**.
 - [x] **Multiple Trap Templates** (Cloudflare, Drive, Zoom, Facebook).
 - [x] **WhatsApp OSINT Checker** (Auto Profile Pic).
