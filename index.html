@@ -258,24 +258,50 @@
         }
 
         .modal-body h3 {
+            color: var(--primary);
+            margin: 25px 0 10px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-body h4 {
             color: #fff;
-            margin: 20px 0 10px;
-            font-size: 1rem;
+            margin: 15px 0 8px;
+            font-size: 0.95rem;
         }
 
         .modal-body p,
         .modal-body ul {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            color: #aaa;
         }
 
         .modal-body ul {
             padding-left: 20px;
         }
 
-        .modal-body code {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2px 5px;
-            border-radius: 4px;
+        .modal-body li {
+            margin-bottom: 5px;
+        }
+
+        /* Responsive Modal */
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 20px;
+                border-radius: 15px;
+                max-width: 95%;
+            }
+
+            .modal-grid {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+
+            .modal-header h2 {
+                font-size: 1rem;
+            }
         }
 
         .btn-lacak:hover {
@@ -1000,43 +1026,91 @@ User Agent: ${tgt.ua || '?'}`;
             </div>
             <div class="modal-body" style="font-family: 'Outfit', sans-serif;">
                 <div
-                    style="background: rgba(var(--primary-glow), 0.1); border-left: 4px solid var(--primary); padding: 15px; margin-bottom: 25px; border-radius: 4px;">
-                    <p style="color: var(--primary); font-weight: bold; margin:0;">🔒 Zero Persistence Policy Activated
-                    </p>
-                    <p style="margin:0; font-size: 0.8rem;">Your tracking data is volatile and never stored on our
-                        servers.</p>
+                    style="background: rgba(0, 240, 255, 0.05); border-left: 4px solid var(--primary); padding: 15px; margin-bottom: 30px; border-radius: 4px;">
+                    <p style="color: var(--primary); font-weight: bold; margin:0; font-size: 0.9rem;">🔒 Zero
+                        Persistence Policy Activated</p>
+                    <p style="margin:0; font-size: 0.8rem; color: #888;">Data is volatile and never stored on
+                        our servers. Version 1.3</p>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                    <div style="min-width: 0;">
-                        <h3 style="color: var(--primary); font-size: 1rem; margin-bottom: 10px;">🇮🇩 Bahasa Indonesia
-                        </h3>
-                        <p style="font-size: 0.85rem;"><b>Investigasi Defensif:</b> SINTEL-HP adalah alat OSINT untuk
-                            ngeberantas penipuan. Kami menghormati UU PDP No. 27/2022.</p>
-                        <p style="font-size: 0.85rem;"><b>Data:</b> IP, Geo-IP, Device Fingerprint (GPU, CPUcore, RAM,
-                            Baterai), dan GPS Presisi (Hanya dengan izin target).</p>
-                        <p style="font-size: 0.85rem;"><b>Legalitas:</b> Penggunaan alat ini sepenuhnya tanggung jawab
-                            user. Developer tidak bertanggung jawab atas segala bentuk penyalahgunaan.</p>
+                <div class="modal-grid"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; text-align: left;">
+                    <!-- ID CONTENT -->
+                    <div class="lang-section">
+                        <h3 style="margin-top:0; color: var(--primary);"><i data-lucide="flag"></i> Bahasa Indonesia
+                            (ID)</h3>
+
+                        <h4>🛡️ 1. Pendahuluan dan Dasar Hukum</h4>
+                        <p>SINTEL-HP (Mata Penipu) adalah kerangka kerja <b>Open Source Intelligence (OSINT)</b> yang
+                            dikembangkan untuk tujuan investigasi defensif, keamanan siber, dan analisis data forensik
+                            digital. Kami berkomitmen untuk menghormati privasi data sesuai dengan UU No. 27 Tahun 2022
+                            (UU PDP), UU ITE No. 11 Tahun 2008, dan standar internasional seperti GDPR.</p>
+
+                        <h4>🔍 2. Klasifikasi Data yang Dikumpulkan</h4>
+                        <p><b>A. Informasi Identifikasi Jaringan:</b> Alamat IP Publik (IPv4/IPv6), Data Geolocation
+                            Kasar (Negara, Provinsi, Kota, Kode Pos), dan Metadata ISP (Provider, ASN, tipe koneksi).
+                        </p>
+                        <p><b>B. Informasi Perangkat (Advanced Fingerprinting):</b> Sistem Operasi (Tipe, Versi), Web
+                            Browser, Jumlah core CPU, Memori RAM (estimasi), WebGL GPU Renderer, Status Baterai, dan
+                            Orientasi Layar.</p>
+                        <p><b>C. Lokasi Presisi (High-Accuracy GPS):</b> Sistem hanya akan mengakses koordinat lintang
+                            dan bujur secara presisi jika dan hanya jika target memberikan izin secara manual (Opt-in
+                            Consent).</p>
+
+                        <h4>💾 3. Retensi dan Keamanan Data</h4>
+                        <p><b>Transient Data Flow:</b> SINTEL-HP beroperasi dengan kebijakan "Zero Persistence". Data
+                            yang diambil diteruskan secara langsung ke dashboard tanpa disimpan di database permanen.
+                        </p>
+                        <p><b>Lokalitas Data:</b> Pengembang tidak memiliki akses ke data yang Anda kumpulkan. Semua
+                            data bersifat privat antara Link Jebakan dan Dashboard Anda.</p>
+
+                        <h4>🚫 4. Ketentuan Penggunaan dan Larangan</h4>
+                        <p>Dilarang menggunakan untuk Cyber-Stalking, Social Engineering jahat/pemerasan, Doxxing, atau
+                            segala tindakan kriminal yang melanggar hukum pidana.</p>
+
+                        <h4>⚖️ 5. Penyangkalan Tanggung Jawab (Disclaimer)</h4>
+                        <p>Segala risiko hukum, teknis, dan sosial sepenuhnya berada di tangan pengguna. Pengembang
+                            <b>TIDAK</b> memberikan bantuan hukum bagi penyalahgunaan alat ini. Disediakan "AS IS" tanpa
+                            garansi.</p>
                     </div>
-                    <div style="min-width: 0;">
-                        <h3 style="color: var(--primary); font-size: 1rem; margin-bottom: 10px;">🇺🇸 English Version
-                        </h3>
-                        <p style="font-size: 0.85rem;"><b>Defensive Research:</b> SINTEL-HP is an OSINT framework for
-                            fraud detection. Compliant with GDPR/International standards.</p>
-                        <p style="font-size: 0.85rem;"><b>Captured Data:</b> IP, Coarse Geo, Hardware Fingerprinting
-                            (WebGL, battery, CPU), and Precise GPS (via Opt-in consent).</p>
-                        <p style="font-size: 0.85rem;"><b>Disclaimer:</b> Assumption of risk lies solely with the user.
-                            Developers are not liable for legal consequences.</p>
+
+                    <!-- EN CONTENT -->
+                    <div class="lang-section">
+                        <h3 style="margin-top:0; color: var(--primary);"><i data-lucide="languages"></i> English Version
+                            (EN)</h3>
+
+                        <h4>🛡️ 1. Introduction and Legal Basis</h4>
+                        <p>SINTEL-HP is an <b>Open Source Intelligence (OSINT)</b> framework for defensive
+                            investigation, cybersecurity research, and digital forensic analysis. We align with GDPR,
+                            CCPA, and Law No. 27 of 2022 (UU PDP).</p>
+
+                        <h4>🔍 2. Data Classification and Collection</h4>
+                        <p><b>A. Network Identification:</b> Public IP Address (IPv4/IPv6), Coarse Geolocation (Country,
+                            Region, City), and ISP Metadata (ASN, connection type).</p>
+                        <p><b>B. Advanced Device Fingerprinting:</b> Operating System details, Browser engine, CPU core
+                            count, estimated RAM, WebGL GPU Renderer, Battery telemetry, and Screen Orientation.</p>
+                        <p><b>C. Precise Location (High-Accuracy GPS):</b> Access to precise Latitude and Longitude
+                            occurs only with explicit manual permission from the target (Opt-in Consent).</p>
+
+                        <h4>💾 3. Data Retention and Security</h4>
+                        <p><b>Transient Data Flow:</b> SINTEL-HP operates under a "Zero Persistence" policy. Captured
+                            data is streamed real-time via SSE and not stored on developer servers.</p>
+                        <p><b>Security:</b> Users must implement TLS/SSL (HTTPS) to prevent data interception during
+                            transmission.</p>
+
+                        <h4>🚫 4. Acceptable Use Policy (AUP)</h4>
+                        <p>Strictly prohibited for: Cyber-Stalking, Malicious Social Engineering, Doxxing, or general
+                            unlawful acts.</p>
+
+                        <h4>⚖️ 5. Disclaimer of Liability</h4>
+                        <p>All legal, technical, and social risks rest solely with the end user. Developers <b>SHALL
+                                NOT</b> provide legal protection for misuse. Licensed under MIT "AS IS".</p>
                     </div>
                 </div>
 
-                <div
-                    style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--glass-border); text-align: center;">
-                    <p style="font-size: 0.8rem; color: var(--text-dim);">
-                        Full 100+ line legal documentation: <br>
-                        <a href="https://github.com/errorcript/SINTEL-HP-/blob/main/PRIVACY.md" target="_blank"
-                            style="color: var(--primary);">github.com/errorcript/SINTEL-HP-/PRIVACY.md</a>
-                    </p>
+                <div style="margin-top: 50px; text-align: center; opacity: 0.5; font-size: 0.75rem;">
+                    <p>⚠️ Unauthorized tracking is a criminal offense in most jurisdictions.<br>
+                        © 2026 SINTEL-HP GLOBAL LEGAL FRAMEWORK</p>
                 </div>
             </div>
         </div>
