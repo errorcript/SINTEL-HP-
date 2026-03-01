@@ -199,6 +199,85 @@
             box-shadow: 0 5px 15px var(--accent-glow);
         }
 
+        /* MODAL POPUP STYLES */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid var(--glass-border);
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            border-radius: 20px;
+            position: relative;
+            padding: 30px;
+            overflow-y: auto;
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: sticky;
+            top: -30px;
+            background: rgba(15, 15, 15, 0.95);
+            padding: 10px 0;
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2rem;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .modal-body h3 {
+            color: #fff;
+            margin: 20px 0 10px;
+            font-size: 1rem;
+        }
+
+        .modal-body p,
+        .modal-body ul {
+            margin-bottom: 15px;
+        }
+
+        .modal-body ul {
+            padding-left: 20px;
+        }
+
+        .modal-body code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
         .btn-lacak:hover {
             transform: translateY(-2px);
             filter: brightness(1.1);
@@ -901,15 +980,75 @@ User Agent: ${tgt.ua || '?'}`;
                 }
             });
         }
+
+        function togglePrivacy() {
+            const modal = document.getElementById('privacyModal');
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            } else {
+                modal.style.display = 'flex';
+                lucide.createIcons();
+            }
+        }
     </script>
+
+    <div id="privacyModal" class="modal-overlay" onclick="if(event.target === this) togglePrivacy()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚖️ PRIVACY & LEGAL DISCLAIMER</h2>
+                <button class="modal-close" onclick="togglePrivacy()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body" style="font-family: 'Outfit', sans-serif;">
+                <div
+                    style="background: rgba(var(--primary-glow), 0.1); border-left: 4px solid var(--primary); padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                    <p style="color: var(--primary); font-weight: bold; margin:0;">🔒 Zero Persistence Policy Activated
+                    </p>
+                    <p style="margin:0; font-size: 0.8rem;">Your tracking data is volatile and never stored on our
+                        servers.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div style="min-width: 0;">
+                        <h3 style="color: var(--primary); font-size: 1rem; margin-bottom: 10px;">🇮🇩 Bahasa Indonesia
+                        </h3>
+                        <p style="font-size: 0.85rem;"><b>Investigasi Defensif:</b> SINTEL-HP adalah alat OSINT untuk
+                            ngeberantas penipuan. Kami menghormati UU PDP No. 27/2022.</p>
+                        <p style="font-size: 0.85rem;"><b>Data:</b> IP, Geo-IP, Device Fingerprint (GPU, CPUcore, RAM,
+                            Baterai), dan GPS Presisi (Hanya dengan izin target).</p>
+                        <p style="font-size: 0.85rem;"><b>Legalitas:</b> Penggunaan alat ini sepenuhnya tanggung jawab
+                            user. Developer tidak bertanggung jawab atas segala bentuk penyalahgunaan.</p>
+                    </div>
+                    <div style="min-width: 0;">
+                        <h3 style="color: var(--primary); font-size: 1rem; margin-bottom: 10px;">🇺🇸 English Version
+                        </h3>
+                        <p style="font-size: 0.85rem;"><b>Defensive Research:</b> SINTEL-HP is an OSINT framework for
+                            fraud detection. Compliant with GDPR/International standards.</p>
+                        <p style="font-size: 0.85rem;"><b>Captured Data:</b> IP, Coarse Geo, Hardware Fingerprinting
+                            (WebGL, battery, CPU), and Precise GPS (via Opt-in consent).</p>
+                        <p style="font-size: 0.85rem;"><b>Disclaimer:</b> Assumption of risk lies solely with the user.
+                            Developers are not liable for legal consequences.</p>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--glass-border); text-align: center;">
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">
+                        Full 100+ line legal documentation: <br>
+                        <a href="https://github.com/errorcript/SINTEL-HP-/blob/main/PRIVACY.md" target="_blank"
+                            style="color: var(--primary);">github.com/errorcript/SINTEL-HP-/PRIVACY.md</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
     <footer
         style="margin-top: 3rem; text-align: center; font-size: 0.75rem; color: var(--text-dim); padding-bottom: 2rem;">
         <p>&copy; 2026 SINTEL-HP. Dibuat dengan ☕ oleh <a href="https://github.com/errorcript" target="_blank"
                 style="color:var(--primary); text-decoration:none;">Errorcript</a></p>
         <div style="margin-top: 10px; display: flex; justify-content: center; gap: 15px;">
-            <a href="https://github.com/errorcript/SINTEL-HP-/blob/main/PRIVACY.md" target="_blank"
+            <a href="javascript:void(0)" onclick="togglePrivacy()"
                 style="color:var(--text-dim); text-decoration:underline;">Privacy Policy</a>
-            <a href="https://github.com/errorcript/SINTEL-HP-/blob/main/PRIVACY.md" target="_blank"
+            <a href="javascript:void(0)" onclick="togglePrivacy()"
                 style="color:var(--text-dim); text-decoration:underline;">Disclaimer</a>
         </div>
     </footer>
