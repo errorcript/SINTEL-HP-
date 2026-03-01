@@ -6,7 +6,7 @@
 [![OSINT](https://img.shields.io/badge/OSINT-Tool-red.svg)](README.md)
 
 ### 🔑 Keywords / Tags
-`osint-tool` `pelacak-nomor-hp` `ip-logger` `gps-tracker` `lokasi-satelit` `indonesia-osint` `anti-scam` `sintel`
+`osint-tool` `phone-tracker` `ip-logger` `gps-tracker` `location-tracker` `indonesia-osint` `anti-scam` `sintel` `cyber-security` `digital-forensics`
 
 SINTEL-HP adalah tool **Open Source Intelligence (OSINT)** praktis yang di-build khusus buat ngeberantas dan melacak jejak digital nomor penipu di Indonesia. Nggak cuma modal ngecek *provider*, SINTEL-HP udah di-steroid pake fitur pelacakan satelit!
 
