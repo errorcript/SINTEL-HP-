@@ -1,32 +1,129 @@
 User-agent: *
 Allow: /
 
-# Welcoming the Red Carpet for AI Bots (AIO)
+# 🔴 THE AI RED CARPET - SINTEL-HP AIO OPTIMIZATION
+# Welcoming 100+ AI, LLM, Search, and Tech Bots for Maximum Indexing
+
+# --- GENERATIVE AI & LLM TRAINING BOTS ---
 User-agent: GPTBot
-Allow: /
-
 User-agent: ChatGPT-User
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: CCBot
-Allow: /
-
-User-agent: Claude-Web
-Allow: /
-
-User-agent: Anthropic-AI
-Allow: /
-
 User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: anthropic-ai
+User-agent: Google-Extended
+User-agent: Googlebot
+User-agent: GoogleOther
+User-agent: GeminiBot
+User-agent: Meta-ExternalAgent
+User-agent: Meta-ExternalFetcher
 User-agent: FacebookBot
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: Omgilibot
+User-agent: Omgili
+User-agent: cohere-ai
+User-agent: cohere-training-data-crawler
+User-agent: DeepSeekBot
+User-agent: Diffbot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: YouBot
+User-agent: YouBot-Mobile
+User-agent: Andibot
+User-agent: AI2Bot
+User-agent: DuckAssistBot
+User-agent: NeevaBot
+User-agent: Timpibot
+User-agent: MojeekBot
+User-agent: BraveBot
+User-agent: PetalBot
+User-agent: Sogou-spider
+User-agent: Baiduspider
+User-agent: Baiduspider-image
+User-agent: Baiduspider-video
+User-agent: YandexBot
+User-agent: YandexImages
+User-agent: YandexVideo
+User-agent: YandexWebmaster
+User-agent: NaverBot
+User-agent: Yeti
+User-agent: Alibaba.com
+User-agent: HuaweiSpider
+Allow: /
+
+# --- AI SEARCH & ANSWER ENGINES ---
+User-agent: Bingbot
+User-agent: Adidxbot
+User-agent: BingPreview
+User-agent: DuckDuckBot
+User-agent: Qwantify
+User-agent: SeznamBot
+User-agent: Mail.RU_Bot
+User-agent: KagiBot
+User-agent: KagiSearch
+User-agent: StartpageBot
+User-agent: Exabot
+User-agent: Gigabot
+User-agent: Scrubby
+User-agent: Teoma
+User-agent: WiseNut
+User-agent: Inktomi
+User-agent: FastCrawler
+User-agent: InfoSeek
+User-agent: Excite
+User-agent: Magellan
+User-agent: WebCrawler
+User-agent: LookSmart
+User-agent: Snapbot
+User-agent: CuilBot
+User-agent: Wikia
+User-agent: BlekkoBot
+User-agent: SearxBot
+User-agent: SwisscowsBot
+User-agent: YepBot
+User-agent: Grok
+User-agent: Pi-Bot
+User-agent: JasperBot
+User-agent: CopyAIBot
+User-agent: WritesonicBot
+User-agent: FraseBot
+Allow: /
+
+# --- SOCIAL, COMMS & UTILITY BOTS ---
+User-agent: Slackbot
+User-agent: Slack-ImgProxy
+User-agent: Slackbot-LinkExpanding
+User-agent: Discordbot
+User-agent: TelegramBot
+User-agent: Twitterbot
+User-agent: LinkedInBot
+User-agent: WhatsApp
+User-agent: PinterestBot
+User-agent: SkypeShell
+User-agent: Yahoo! Slurp
+User-agent: Mediapartners-Google
+User-agent: AdsBot-Google
+User-agent: Googlebot-News
+User-agent: Storebot-Google
+User-agent: Google-Safety
+User-agent: Google-Read-Aloud
+User-agent: Google-Search-Analytics
+User-agent: SemrushBot
+User-agent: AhrefsBot
+User-agent: DotBot
+User-agent: Rogentbot
+User-agent: MJ12bot
+User-agent: grapeshot
+User-agent: spbot
+User-agent: BLEXBot
+User-agent: SEOkicks-Robot
+User-agent: RyteBot
+User-agent: Screaming-Frog-SEO-Spider
+User-agent: SiteAuditBot
 Allow: /
 
 Sitemap: https://sintel.neoma.space/sitemap.xml
