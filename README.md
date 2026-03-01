@@ -52,5 +52,7 @@ node main.js
 *Developer tidak bertanggung jawab atas segala bentuk penyalahgunaan alat ini (pengintaian ilegal, doxxing target tidak bersalah, stalking, pelanggaran UU ITE).*  
 **Do it at your own risk!** ☕
 
+📖 **Baca Selengkapnya:** [Privacy Policy & Disclaimer](PRIVACY.md)
+
 ***
 *Dibuat oleh Neoma / Errorcript untuk dunia maya Indonesia yang lebih bersih.*
