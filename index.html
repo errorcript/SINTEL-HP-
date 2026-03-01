@@ -1232,37 +1232,39 @@ User Agent: ${tgt.ua || '?'}`;
     </div>
 
     <div id="reportModal" class="modal-overlay" onclick="if(event.target === this) toggleReport()">
-        <div class="modal-content" style="max-width: 500px; text-align: center;">
+        <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
                 <h2>🚩 REPORT ABUSE / TAKEDOWN</h2>
                 <button class="modal-close" onclick="toggleReport()"><i data-lucide="x"></i></button>
             </div>
             <div class="modal-body"
                 style="font-family: 'Outfit', sans-serif; text-align: left; color: #aaa; font-size: 0.85rem;">
-                <p style="margin-bottom: 15px;">Kami memiliki kebijakan nol toleransi untuk penyalahgunaan platform ini.
+                <p style="margin-bottom: 20px;">Kami memiliki kebijakan nol toleransi untuk penyalahgunaan platform ini.
                     Jika Anda menemukan link <i>SINTEL-HP</i> yang digunakan untuk aktivitas ilegal:</p>
                 <div
-                    style="background: rgba(255, 68, 68, 0.1); border-left: 3px solid #ff4444; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <p style="color: #ff4444; font-weight: bold; margin-bottom: 10px;">CARA MELAPORKAN:</p>
-                    <ul style="list-style: none; padding: 0;">
-                        <li>📧 Email: <b>support@neoma.space</b></li>
-                        <li>💬 GitHub: Kirim laporan via <b>Issue Report</b> di repositori resmi.</li>
+                    style="background: rgba(255, 68, 68, 0.1); border-left: 3px solid #ff4444; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+                    <p style="color: #ff4444; font-weight: bold; margin-bottom: 12px; font-size: 0.9rem;">CARA
+                        MELAPORKAN:</p>
+                    <ul style="list-style: none; padding: 0; line-height: 1.8;">
+                        <li>📧 Email: <b style="color: #fff;">support@neoma.space</b></li>
+                        <li>💬 GitHub: Kirim laporan via <b style="color: #fff;">Issue Report</b> di repositori resmi.
+                        </li>
                     </ul>
                 </div>
-                <p>Mohon sertakan bukti URL yang bermasalah agar tim pengembang dapat segera mematikan akses ke link
-                    atau template tersebut.</p>
+                <p style="opacity: 0.7;">Mohon sertakan bukti URL yang bermasalah agar tim pengembang dapat segera
+                    mematikan akses ke link atau template tersebut.</p>
             </div>
         </div>
     </div>
 
     <div id="licenseModal" class="modal-overlay" onclick="if(event.target === this) toggleLicense()">
-        <div class="modal-content" style="max-width: 650px;">
+        <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
                 <h2>📜 MIT LICENSE & LIABILITY</h2>
                 <button class="modal-close" onclick="toggleLicense()"><i data-lucide="x"></i></button>
             </div>
             <div class="modal-body"
-                style="font-family: 'Space Mono', monospace; font-size: 0.8rem; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 12px; white-space: pre-wrap; color: #aaa;">
+                style="font-family: 'Space Mono', monospace; font-size: 0.75rem; background: rgba(0,0,0,0.8); padding: 25px; border-radius: 12px; white-space: pre-wrap; color: #bbb; text-align: left; line-height: 1.5; border: 1px solid rgba(255,255,255,0.05);">
                 MIT License
 
                 Copyright (c) 2026 Neoma / Errorcript
@@ -1287,8 +1289,7 @@ User Agent: ${tgt.ua || '?'}`;
                 --------------------------------------------------
                 1. PENGEMBANG TIDAK BERTANGGUNG JAWAB ATAS SEGALA PENYALAHGUNAAN ALAT INI.
                 2. PENGGUNA BERTANGGUNG JAWAB PENUH DI BAWAH UU ITE & UU PDP.
-                3. ALAT INI HANYA UNTUK TUJUAN EDUKASI & OSINT DEFENSIF.
-            </div>
+                3. ALAT INI HANYA UNTUK TUJUAN EDUKASI & OSINT DEFENSIF.</div>
         </div>
     </div>
     <div id="agreementModal" class="modal-overlay agreement-modal">
