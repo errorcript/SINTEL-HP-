@@ -621,7 +621,7 @@
             }).addTo(map);
         }
 
-        // Restore state on load if exists
+        // Restore state on load (Monitoring Mode only)
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const urlTopic = urlParams.get('topic');
@@ -635,19 +635,6 @@
                 document.getElementById('displayTrapLink').innerText = "📡 MONITORING MODE: " + urlTopic;
                 initMap();
                 listenToDashboard(urlTopic);
-                return;
-            }
-
-            const savedTopic = localStorage.getItem('sintel_topic');
-            const savedTrapLinkRaw = localStorage.getItem('sintel_trap_link_raw');
-            const savedTrapLink = localStorage.getItem('sintel_trap_link');
-            if (savedTopic && savedTrapLink) {
-                document.getElementById('setupView').style.display = 'none';
-                document.getElementById('dashboardView').style.display = 'block';
-                if (savedTrapLinkRaw) document.getElementById('displayTrapLinkRaw').innerText = savedTrapLinkRaw;
-                document.getElementById('displayTrapLink').innerText = savedTrapLink;
-                initMap();
-                listenToDashboard(savedTopic);
             }
         });
 
