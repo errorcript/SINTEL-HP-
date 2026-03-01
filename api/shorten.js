@@ -5,8 +5,11 @@ module.exports = async (req, res) => {
     if (!url) return res.status(400).json({ error: 'URL required' });
 
     try {
-        const response = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
-        return res.status(200).json({ shorturl: response.data });
+        const response = await axios.get(`https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`);
+        if (response.data && response.data.shorturl) {
+            return res.status(200).json({ shorturl: response.data.shorturl });
+        }
+        throw new Error('Invalid response');
     } catch (e) {
         return res.status(500).json({ error: 'Shortening failed', shorturl: url });
     }
