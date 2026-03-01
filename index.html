@@ -229,6 +229,22 @@
             font-size: 0.9rem;
             line-height: 1.6;
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--primary-glow);
         }
 
         .modal-header {
@@ -1071,7 +1087,8 @@ User Agent: ${tgt.ua || '?'}`;
                         <h4>⚖️ 5. Penyangkalan Tanggung Jawab (Disclaimer)</h4>
                         <p>Segala risiko hukum, teknis, dan sosial sepenuhnya berada di tangan pengguna. Pengembang
                             <b>TIDAK</b> memberikan bantuan hukum bagi penyalahgunaan alat ini. Disediakan "AS IS" tanpa
-                            garansi.</p>
+                            garansi.
+                        </p>
                     </div>
 
                     <!-- EN CONTENT -->
