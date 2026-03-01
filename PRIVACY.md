@@ -1,39 +1,54 @@
 # ⚖️ Privacy Policy & Disclaimer - SINTEL-HP
-> **Versi 1.0 - Terakhir Diperbarui: 1 Maret 2026**
-
-## 🛡️ Pendahuluan
-SINTEL-HP (Mata Penipu) adalah alat **Open Source Intelligence (OSINT)** yang dirancang untuk membantu pengguna melakukan investigasi defensif terhadap indikasi tindak penipuan (scam). Kami sangat menghargai privasi dan hak data pribadi sesuai dengan semangat **UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)** di Indonesia.
-
-Penggunaan alat ini sepenuhnya merupakan tanggung jawab pengguna akhir. Dengan menggunakan SINTEL-HP, Anda menyetujui ketentuan yang tercantum dalam dokumen ini.
+> **Version 1.1 - Last Updated: March 1, 2026**
 
 ---
 
-## 🔍 1. Data yang Dikumpulkan oleh Tool
-Alat ini bekerja dengan mekanisme "Target Logging" melalui link jebakan (Trap Link). Data yang dapat ditarik oleh sistem saat target melakukan interaksi meliputi:
-- **Alamat IP (Internet Protocol):** Digunakan untuk mengidentifikasi lokasi kasar dan penyedia layanan internet (ISP).
-- **Koordinat GPS Presisi:** Hanya diambil jika target memberikan izin (explicit consent) pada browser mereka melalui HTML5 Geolocation API.
-- **Informasi Perangkat (Fingerprinting):** Meliputi tipe OS (Android/iOS/Windows), resolusi layar, tipe GPU, status baterai, dan User-Agent browser.
-- **Data Jaringan:** Tipe koneksi (4G/Wifi) dan perkiraan kecepatan internet.
+## 🇮🇩 Bahasa Indonesia (ID)
 
-## 💾 2. Penyimpanan dan Keamanan Data
-- **Transient Data:** Data yang ditarik oleh tool ini bersifat sementara dan diteruskan secara *real-time* ke Dashboard pengguna melalui protokol Server-Sent Events (SSE).
-- **Zero Database Policy:** SINTEL-HP (versi standar) tidak menyimpan data target di database permanen milik pengembang. Data hanya tersimpan di memori browser pengguna selama sesi berlangsung.
-- **Enkripsi:** Kami menyarankan penggunaan HTTPS (SSL) untuk setiap deployment guna memastikan data tidak disadap oleh pihak ketiga selama transmisi.
+### 🛡️ Pendahuluan
+SINTEL-HP adalah alat **Open Source Intelligence (OSINT)** yang dirancang untuk investigasi defensif terhadap indikasi penipuan. Kami menghormati privasi sesuai dengan **UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)** di Indonesia dan standar pelindungan data internasional.
 
-## 🚫 3. Batasan Penggunaan (Acceptable Use Policy)
-Anda dilarang keras menggunakan SINTEL-HP untuk:
-1. Melakukan pengintaian (stalking) terhadap individu yang tidak bersalah.
-2. Tindakan intimidasi, pemerasan, atau pengancaman.
-3. Melanggar privasi orang lain tanpa dasar hukum atau kebutuhan investigasi defensif yang sah.
-4. Segala tindakan yang melanggar **UU ITE (Informasi dan Transaksi Elektronik)**.
+### 🔍 1. Data yang Dikumpulkan
+Sistem ini menarik data berikut saat target berinteraksi dengan Trap Link:
+- **IP Address & Geolocation (Kasar):** Identifikasi ISP dan lokasi wilayah.
+- **Koordinat GPS Presisi:** Hanya diambil dengan izin eksplisit target melalui browser.
+- **Device Fingerprinting:** OS, resolusi layar, GPU, baterai, dan User-Agent.
 
-## ⚖️ 4. Disclaimer (Pernyataan Ganti Rugi)
-- **Developer SINTEL-HP** tidak bertanggung jawab atas segala kerusakan, kerugian hukum, atau tuntutan pihak ketiga yang timbul akibat penyalahgunaan alat ini oleh pengguna.
-- Alat ini disediakan "AS IS" (apa adanya) tanpa jaminan ketersediaan layanan atau akurasi data 100%.
-- Pengguna wajib menaati hukum yang berlaku di wilayah hukum masing-masing (khususnya Indonesia).
+### 💾 2. Kebijakan Data
+- **Transient Data:** Data bersifat sementara dan diteruskan secara *real-time* ke Dashboard.
+- **Zero Database:** Kami tidak menyimpan data target secara permanen di server pengembang.
 
-## 📩 5. Kontak & Kontribusi
-Jika Anda menemukan kerentanan pada alat ini atau ingin melakukan komplain terkait penyalahgunaan link yang mengatasnamakan infrastruktur kami, silakan buka *Issue* di repositori resmi GitHub kami.
+### ⚖️ 3. Disclaimer (Tanggung Jawab)
+- **Tanggung Jawab Pengguna:** Penggunaan alat ini sepenuhnya di bawah kendali dan risiko pengguna.
+- **Penyalahgunaan:** Developer tidak bertanggung jawab atas tindakan ilegal (stalking, intimidasi, dll) yang dilakukan oleh pengguna.
 
 ---
-**Peringatan:** *Penyalahgunaan teknologi pelacakan untuk tindakan ilegal dapat berujung pada sanksi pidana.*
+
+## 🇺🇸 English (EN)
+
+### 🛡️ Introduction
+SINTEL-HP is an **Open Source Intelligence (OSINT)** tool designed for defensive investigation against fraudulent activities. We adhere to privacy principles in line with the **General Data Protection Regulation (GDPR)** and international data protection standards.
+
+### 🔍 1. Data Collection
+The system captures the following technical data during target interaction:
+- **IP Address & Geolocation (Coarse):** Identifying ISP and regional location.
+- **Precise GPS Coordinates:** Only captured with explicit user consent via the browser's Geolocation API.
+- **Device Fingerprinting:** OS, screen resolution, GPU, battery status, and User-Agent strings.
+
+### 💾 2. Data Retention Policy
+- **Transient Transmission:** All captured data is transient and transmitted in real-time to the user's dashboard.
+- **Zero Database Policy:** We do not store target data on our developer servers. Data remains in the user's local session.
+
+### � 3. Acceptable Use & Prohibitions
+Users are strictly prohibited from using SINTEL-HP for:
+- Unlawful surveillance or stalking of innocent individuals.
+- Harassment, extortion, or any form of cyber-bullying.
+- Any actions violating international cyber-crime laws or the **Computer Misuse Act**.
+
+### ⚖️ 4. Disclaimer of Liability
+- **User Risk:** Deployment and use of this tool are at the user's sole risk.
+- **No Warranty:** This tool is provided "AS IS" without warranty of any kind, express or implied.
+- **Indemnification:** The developers are not liable for any legal consequences or third-party claims resulting from the misuse of this software.
+
+---
+**Warning:** *Misuse of tracking technology for illegal activities may result in severe criminal penalties.*
