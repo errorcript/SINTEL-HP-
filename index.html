@@ -750,17 +750,32 @@
             <div id="panelTutor" class="active-panel">
                 <div class="tutor-container" style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.6;">
 
+                    <!-- STEP 0 -->
+                    <div class="tutor-step"
+                        style="margin-bottom: 2rem; border-left: 2px solid var(--primary); padding-left: 1.5rem;">
+                        <h3
+                            style="color: var(--primary); font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="shield-check" style="width:18px;"></i> STAGE 0: LEGAL PROTOCOL
+                        </h3>
+                        <p>Sistem dilindungi oleh <b>Mandatory Agreement</b>. Setiap user wajib menyetujui Disclaimer
+                            hukum sebelum akses diberikan. Ini prosedur standar buat mastiin lu aman secara hukum
+                            sebagai penyidik defensif.</p>
+                    </div>
+
                     <!-- STEP 1 -->
                     <div class="tutor-step"
                         style="margin-bottom: 2rem; border-left: 2px solid var(--primary); padding-left: 1.5rem;">
                         <h3
                             style="color: var(--primary); font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="search" style="width:18px;"></i> STAGE 1: INTEL GATHERING
+                            <i data-lucide="smartphone" style="width:18px;"></i> STAGE 1: DEEP LOOKUP (OSINT)
                         </h3>
-                        <p>Lu dapet nomor penipu? Masukin ke <b>Tab Lacak Nomor</b>. Liat <b>HLR Region</b>-nya.
-                            Kalo penipu ngaku di Jakarta tapi kartunya terdaftar di "Sulawesi Utara", berarti dia lagi
-                            pake kartu 'buangan' atau emang gerombolan sindikat luar kota. Pakai info ini buat
-                            nge-skakmat omongan dia!</p>
+                        <p>Masukin nomor penipu di tab <b>Lacak Nomor</b>. Lu bakal dapet data berlapis:</p>
+                        <ul style="list-style: none; padding-left: 10px; margin-top: 5px; opacity: 0.8;">
+                            <li>🖼️ <b>WA Profile</b>: Foto profil target nongol otomatis.</li>
+                            <li>📍 <b>HLR Region</b>: Lokasi asli kartu didaftarkan.</li>
+                            <li>🕵️ <b>Truecaller</b>: Nama asli dari database publik.</li>
+                            <li>💀 <b>Scam DB</b>: Cek apakah nomor sudah masuk daftar hitam <i>Kredibel.id</i>.</li>
+                        </ul>
                     </div>
 
                     <!-- STEP 2 -->
@@ -768,15 +783,16 @@
                         style="margin-bottom: 2rem; border-left: 2px solid var(--accent); padding-left: 1.5rem;">
                         <h3
                             style="color: var(--accent); font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="crosshair" style="width:18px;"></i> STAGE 2: PREPARING THE TRAP
+                            <i data-lucide="layout" style="width:18px;"></i> STAGE 2: SOCIAL ENGINEERING
                         </h3>
-                        <p>Pindah ke <b>Tab GPS Tracker</b>. Masukin link asli yang mau lu tuju (misal:
-                            YouTube/Google). Klik tombol merah buat generate link jebakan. </p>
-                        <div
-                            style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px dashed var(--glass-border);">
-                            <b>💡 AUTO-SHORTEN:</b> Link jebakan lu otomatis dipendekin biar nggak curiga. Gak perlu
-                            manual lagi pake bit.ly!
-                        </div>
+                        <p>Pindah ke <b>GPS Tracker</b>. Pilih <b>Template</b> jebakan yang paling cocok:</p>
+                        <ul style="list-style: none; padding-left: 10px; margin-top: 5px; opacity: 0.8;">
+                            <li>🌐 <b>Cloudflare</b>: Paling efektif buat nge-bypass radar mental target.</li>
+                            <li>📁 <b>Google Drive</b>: Cocok buat modus "Kirim File Bukti".</li>
+                            <li>� <b>Zoom</b>: Efektif buat pura-pura ajak meeting klarifikasi.</li>
+                        </ul>
+                        <p style="margin-top: 5px;">Sistem bakal <b>Auto-Shorten</b> link lu biar keliatan bersih
+                            (is.gd).</p>
                     </div>
 
                     <!-- STEP 3 -->
@@ -784,15 +800,13 @@
                         style="margin-bottom: 2rem; border-left: 2px solid var(--success); padding-left: 1.5rem;">
                         <h3
                             style="color: var(--success); font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="shield-alert" style="width:18px;"></i> STAGE 3: EXECUTION & MULTI-TRACKING
+                            <i data-lucide="radar" style="width:18px;"></i> STAGE 3: RADAR SURVEILLANCE
                         </h3>
-                        <p>Kirim link ke target. Dashboard ini bisa nampilin <b>Banyak Target sekaligus</b>. Tiap orang
-                            yang klik bakal muncul sebagai Pin baru di peta.</p>
-                        <ul style="list-style: none; padding-left: 10px; margin-top: 5px;">
-                            <li style="margin-bottom: 5px;"><span style="color:#ff4444">• Pin Merah</span>: Lokasi kasar
-                                via IP (radius 1-5km).</li>
-                            <li style="margin-bottom: 5px;"><span style="color:#22ff22">• Pin Hijau</span>: Lokasi
-                                akurat via Satelit (radius 5-10m).</li>
+                        <p>Begitu target klik link, <b>Alarm Sonar</b> bakal bunyi! Pantau di Dashboard:</p>
+                        <ul style="list-style: none; padding-left: 10px; margin-top: 5px; opacity: 0.8;">
+                            <li>🔴 <b>Pin Merah</b>: Lokasi via IP (Radius kota).</li>
+                            <li>🟢 <b>Pin Hijau</b>: Lokasi presisi via GPS (Akurasi 5-10 meter).</li>
+                            <li>📱 <b>Fingerprint</b>: Liat tipe HP, Browser, sampe sisa Baterai target.</li>
                         </ul>
                     </div>
 
@@ -801,11 +815,11 @@
                         style="margin-bottom: 1.5rem; border-left: 2px solid #ffcc00; padding-left: 1.5rem;">
                         <h3
                             style="color: #ffcc00; font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="user-check" style="width:18px;"></i> NEXT STEPS: REPORTING
+                            <i data-lucide="file-text" style="width:18px;"></i> STAGE 4: DATA EXPORT & EVIDENCE
                         </h3>
-                        <p>Dapet lokasinya? Screenshot data koordinat + IP-nya. Kirim balik ke si penipu biar dia
-                            ketar-ketir, atau laporin ke <b>cekrekening.id</b> biar rekening dia diblokir permanen.
-                            Selamatkan korban lainnya!</p>
+                        <p>Semua data bersifat <b>Transient (Zero Persistence)</b> — gak disimpan di database kita. Lu
+                            harus klik <b>EKSPOR DATA</b> buat simpan bukti laporan ke Polisi / cekrekening.id sebelum
+                            lu tutup tab ini.</p>
                     </div>
 
                 </div>
@@ -1264,22 +1278,32 @@ User Agent: ${tgt.ua || '?'}`;
                 <button class="modal-close" onclick="toggleLicense()"><i data-lucide="x"></i></button>
             </div>
             <div class="modal-body"
-                style="font-family: 'Space Mono', monospace; font-size: 0.75rem; background: rgba(0,0,0,0.8); padding: 25px; border-radius: 12px; white-space: pre-wrap; color: #bbb; text-align: left; line-height: 1.5; border: 1px solid rgba(255,255,255,0.05);">MIT License
+                style="font-family: 'Space Mono', monospace; font-size: 0.75rem; background: rgba(0,0,0,0.8); padding: 25px; border-radius: 12px; white-space: pre-wrap; color: #bbb; text-align: left; line-height: 1.5; border: 1px solid rgba(255,255,255,0.05);">
+                MIT License
 
-Copyright (c) 2026 Neoma / Errorcript
+                Copyright (c) 2026 Neoma / Errorcript
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+                Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+                associated documentation files (the "Software"), to deal in the Software without restriction, including
+                without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+                following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+                The above copyright notice and this permission notice shall be included in all copies or substantial
+                portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+                LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+                NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+                WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+                SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
---------------------------------------------------
-ADDITIONAL LIMITATION OF LIABILITY (INDONESIA)
---------------------------------------------------
-1. PENGEMBANG TIDAK BERTANGGUNG JAWAB ATAS SEGALA PENYALAHGUNAAN ALAT INI.
-2. PENGGUNA BERTANGGUNG JAWAB PENUH DI BAWAH UU ITE & UU PDP.
-3. ALAT INI HANYA UNTUK TUJUAN EDUKASI & OSINT DEFENSIF.</div>
+                --------------------------------------------------
+                ADDITIONAL LIMITATION OF LIABILITY (INDONESIA)
+                --------------------------------------------------
+                1. PENGEMBANG TIDAK BERTANGGUNG JAWAB ATAS SEGALA PENYALAHGUNAAN ALAT INI.
+                2. PENGGUNA BERTANGGUNG JAWAB PENUH DI BAWAH UU ITE & UU PDP.
+                3. ALAT INI HANYA UNTUK TUJUAN EDUKASI & OSINT DEFENSIF.</div>
         </div>
     </div>
     <div id="agreementModal" class="modal-overlay agreement-modal">
@@ -1305,7 +1329,10 @@ ADDITIONAL LIMITATION OF LIABILITY (INDONESIA)
 
     <footer
         style="margin-top: 3rem; text-align: center; font-size: 0.75rem; color: var(--text-dim); padding-bottom: 2rem;">
-        <p>&copy; 2026 SINTEL-HP. Dibuat dengan ☕ oleh <b>Errorcript / Neoma</b></p>
+        <p>&copy; 2026 SINTEL-HP. Dibuat dengan ☕ oleh <a href="https://github.com/errorcript" target="_blank"
+                style="color:var(--primary); text-decoration:none; font-weight:bold;">Errorcript</a> / <a
+                href="http://neoma.space/" target="_blank"
+                style="color:var(--primary); text-decoration:none; font-weight:bold;">Neoma Creative Hub</a></p>
 
         <div class="warrant-canary">
             <i data-lucide="shield-check" style="width:12px; vertical-align:middle; margin-right:5px;"></i>
