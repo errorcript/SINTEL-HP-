@@ -308,6 +308,7 @@
                 padding: 20px;
                 border-radius: 15px;
                 max-width: 95%;
+                max-height: 90vh;
             }
 
             .modal-grid {
@@ -318,6 +319,61 @@
             .modal-header h2 {
                 font-size: 1rem;
             }
+
+            .agreement-actions {
+                flex-direction: column;
+            }
+        }
+
+        .agreement-modal .modal-content {
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 30px var(--primary-glow);
+        }
+
+        .agreement-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-agree {
+            flex: 1;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-agree:hover {
+            box-shadow: 0 0 20px var(--primary-glow);
+            transform: scale(1.02);
+        }
+
+        .btn-decline {
+            flex: 1;
+            background: transparent;
+            color: var(--text-dim);
+            border: 1px solid var(--glass-border);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .warrant-canary {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px dashed var(--success);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.7rem;
+            color: var(--success);
+            display: inline-block;
         }
 
         .btn-lacak:hover {
@@ -604,6 +660,12 @@
                         <div class="icon-wrapper"><i data-lucide="layout"></i></div>
                     </div>
                     <button class="btn-lacak" onclick="generateTracker()">BUAT TRACKING LINK & BUKA DASHBOARD</button>
+                    <p
+                        style="font-size: 0.65rem; color: var(--text-dim); text-align: center; margin-top: 10px; line-height: 1.2;">
+                        ⚠️ Dengan mengklik tombol di atas, Anda menyatakan bahwa penggunaan link ini sepenuhnya legal,
+                        untuk tujuan defensif, dan Anda memegang tanggung jawab penuh atas segala konsekuensi hukum yang
+                        timbul.
+                    </p>
                 </div>
 
                 <div class="live-dash" id="dashboardView">
@@ -1032,6 +1094,23 @@ User Agent: ${tgt.ua || '?'}`;
                 lucide.createIcons();
             }
         }
+
+        // Agreement Logic
+        window.addEventListener('load', () => {
+            if (!localStorage.getItem('sintel_agreed')) {
+                document.getElementById('agreementModal').style.display = 'flex';
+                lucide.createIcons();
+            }
+        });
+
+        function acceptAgreement() {
+            localStorage.setItem('sintel_agreed', 'true');
+            document.getElementById('agreementModal').style.display = 'none';
+        }
+
+        function declineAgreement() {
+            window.location.href = "https://google.com";
+        }
     </script>
 
     <div id="privacyModal" class="modal-overlay" onclick="if(event.target === this) togglePrivacy()">
@@ -1132,15 +1211,45 @@ User Agent: ${tgt.ua || '?'}`;
             </div>
         </div>
     </div>
+    <div id="agreementModal" class="modal-overlay agreement-modal">
+        <div class="modal-content">
+            <div style="font-size: 3rem; margin-bottom: 20px;">⚖️</div>
+            <h2 style="color: var(--primary); font-family: 'Space Mono', monospace; margin-bottom: 15px;">LEGAL NOTICE
+            </h2>
+            <div
+                style="font-size: 0.85rem; color: #aaa; text-align: left; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border-left: 3px solid var(--accent);">
+                <p style="margin-bottom: 10px;">SINTEL-HP adalah alat OSINT defensif. Anda dilarang keras menggunakannya
+                    untuk aktivitas ilegal, pelecehan, atau pemerasan.</p>
+                <p><b>Dengan menekan tombol Setuju:</b><br>
+                    1. Anda membebaskan pengembang dari segala tuntutan hukum.<br>
+                    2. Anda mematuhi UU PDP No. 27/2022 & UU ITE.<br>
+                    3. Seluruh risiko penggunaan ada pada Anda.</p>
+            </div>
+            <div class="agreement-actions">
+                <button class="btn-agree" onclick="acceptAgreement()">SAYA SETUJU (ACCEPT)</button>
+                <button class="btn-decline" onclick="declineAgreement()">DECLINE</button>
+            </div>
+        </div>
+    </div>
+
     <footer
         style="margin-top: 3rem; text-align: center; font-size: 0.75rem; color: var(--text-dim); padding-bottom: 2rem;">
         <p>&copy; 2026 SINTEL-HP. Dibuat dengan ☕ oleh <a href="https://github.com/errorcript" target="_blank"
                 style="color:var(--primary); text-decoration:none;">Errorcript</a></p>
-        <div style="margin-top: 10px; display: flex; justify-content: center; gap: 15px;">
+
+        <div class="warrant-canary">
+            <i data-lucide="shield-check" style="width:12px; vertical-align:middle; margin-right:5px;"></i>
+            <b>WARRANT CANARY:</b> Hingga hari ini, pengembang belum pernah menerima permintaan data atau perintah
+            pengadilan dari otoritas manapun.
+        </div>
+
+        <div style="margin-top: 15px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px;">
             <a href="javascript:void(0)" onclick="togglePrivacy()"
                 style="color:var(--text-dim); text-decoration:underline;">Privacy Policy</a>
             <a href="javascript:void(0)" onclick="togglePrivacy()"
                 style="color:var(--text-dim); text-decoration:underline;">Disclaimer</a>
+            <a href="https://github.com/errorcript/SINTEL-HP-/issues/new?title=Abuse+Report" target="_blank"
+                style="color:#ff4444; text-decoration:underline; font-weight: bold;">REPORT ABUSE</a>
         </div>
     </footer>
 </body>
